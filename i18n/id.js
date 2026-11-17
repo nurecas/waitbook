@@ -77,7 +77,7 @@ WB.i18n.register('id', {
   'lib.priority': 'Prioritas', 'lib.anyPrio': 'Prioritas apa pun', 'lib.type': 'Jenis', 'lib.anyType': 'Jenis apa pun',
   'lib.count': { other: '{n} item' }, 'lib.empty': 'Tidak ada yang cocok.', 'lib.tryKiwix': 'Cari di seluruh perpustakaan Kiwix',
 
-  'item.missing': 'Tidak ditemukan', 'item.yourChoice': 'Pilihan Anda', 'item.add': 'Tambahkan ke kit saya', 'item.remove': 'Hapus dari kit saya', 'item.chooseFirst': 'Pilih bahasa atau wilayah terlebih dahulu',
+  'item.missing': 'Tidak ditemukan', 'item.gone': 'Kiwix tidak lagi menyediakan arsip ini. Arsip ini mungkin kembali dengan nama lain.', 'item.goneSearch': 'Cari di perpustakaan Kiwix', 'item.yourChoice': 'Pilihan Anda', 'item.add': 'Tambahkan ke kit saya', 'item.remove': 'Hapus dari kit saya', 'item.chooseFirst': 'Pilih bahasa atau wilayah terlebih dahulu',
   'item.needs': 'Membutuhkan: {needs}.', 'item.aiCaution': 'AI bisa salah meskipun terdengar yakin. Untuk urusan kesehatan dan keselamatan, cocokkan jawabannya dengan panduan di perpustakaan Anda.',
   'item.shelf': 'Rak', 'item.priority': 'Prioritas', 'item.type': 'Jenis', 'item.license': 'Lisensi', 'item.source': 'Penerbit',
   'item.choose': 'Pilih', 'item.edition': 'Edisi', 'item.edFallback': 'tidak tersedia di semua bahasa; edisi terdekat yang digunakan',

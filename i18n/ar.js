@@ -77,7 +77,7 @@ WB.i18n.register('ar', {
   'lib.priority': 'الأولوية', 'lib.anyPrio': 'أي أولوية', 'lib.type': 'النوع', 'lib.anyType': 'أي نوع',
   'lib.count': { zero: '{n} عنصر', one: '{n} عنصر', two: '{n} عنصران', few: '{n} عناصر', many: '{n} عنصرًا', other: '{n} عنصر' }, 'lib.empty': 'لا يوجد هنا ما يطابق بحثك.', 'lib.tryKiwix': 'ابحث في مكتبة Kiwix كاملة',
 
-  'item.missing': 'غير موجود', 'item.yourChoice': 'اختيارك', 'item.add': 'أضف إلى حقيبتي', 'item.remove': 'أزل من حقيبتي', 'item.chooseFirst': 'اختر لغة أو منطقة أولًا',
+  'item.missing': 'غير موجود', 'item.gone': 'لم يعد Kiwix يقدّم هذا الأرشيف. قد يعود باسم آخر.', 'item.goneSearch': 'ابحث في مكتبة Kiwix', 'item.yourChoice': 'اختيارك', 'item.add': 'أضف إلى حقيبتي', 'item.remove': 'أزل من حقيبتي', 'item.chooseFirst': 'اختر لغة أو منطقة أولًا',
   'item.needs': 'يتطلب: {needs}.', 'item.aiCaution': 'قد يخطئ الذكاء الاصطناعي وهو واثق من نفسه. في أمور الصحة والسلامة، قارن إجاباته بالأدلة الموجودة في مكتبتك.',
   'item.shelf': 'الرف', 'item.priority': 'الأولوية', 'item.type': 'النوع', 'item.license': 'الترخيص', 'item.source': 'الناشر',
   'item.choose': 'اختر', 'item.edition': 'النسخة', 'item.edFallback': 'غير متوفرة بكل اللغات؛ تُستخدم أقرب نسخة',

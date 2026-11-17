@@ -77,7 +77,7 @@ WB.i18n.register('pt', {
   'lib.priority': 'Prioridade', 'lib.anyPrio': 'Qualquer prioridade', 'lib.type': 'Tipo', 'lib.anyType': 'Qualquer tipo',
   'lib.count': { one: '{n} item', many: '{n} itens', other: '{n} itens' }, 'lib.empty': 'Nenhum item encontrado.', 'lib.tryKiwix': 'Pesquisar em toda a biblioteca Kiwix',
 
-  'item.missing': 'Não encontrado', 'item.yourChoice': 'Sua escolha', 'item.add': 'Adicionar ao meu kit', 'item.remove': 'Remover do meu kit', 'item.chooseFirst': 'Escolha primeiro um idioma ou uma região',
+  'item.missing': 'Não encontrado', 'item.gone': 'O Kiwix já não oferece este arquivo ZIM. Ele pode voltar com outro nome.', 'item.goneSearch': 'Pesquisar na biblioteca Kiwix', 'item.yourChoice': 'Sua escolha', 'item.add': 'Adicionar ao meu kit', 'item.remove': 'Remover do meu kit', 'item.chooseFirst': 'Escolha primeiro um idioma ou uma região',
   'item.needs': 'Precisa de: {needs}.', 'item.aiCaution': 'A IA pode errar mesmo parecendo muito segura. Em questões de saúde e segurança, confira as respostas com os guias da sua biblioteca.',
   'item.shelf': 'Estante', 'item.priority': 'Prioridade', 'item.type': 'Tipo', 'item.license': 'Licença', 'item.source': 'Fonte',
   'item.choose': 'Escolher', 'item.edition': 'Edição', 'item.edFallback': 'não existe em todos os idiomas; é usada a edição mais próxima',

@@ -77,7 +77,7 @@ WB.i18n.register('zh', {
   'lib.priority': '优先级', 'lib.anyPrio': '任意优先级', 'lib.type': '类型', 'lib.anyType': '任意类型',
   'lib.count': { other: '{n} 项' }, 'lib.empty': '没有匹配的内容。', 'lib.tryKiwix': '搜索整个 Kiwix 资料库',
 
-  'item.missing': '未找到', 'item.yourChoice': '你的选择', 'item.add': '添加到我的资料包', 'item.remove': '从我的资料包中移除', 'item.chooseFirst': '请先选择语言或地区',
+  'item.missing': '未找到', 'item.gone': 'Kiwix 已不再提供此存档，它可能会以其他名称重新出现。', 'item.goneSearch': '搜索 Kiwix 资料库', 'item.yourChoice': '你的选择', 'item.add': '添加到我的资料包', 'item.remove': '从我的资料包中移除', 'item.chooseFirst': '请先选择语言或地区',
   'item.needs': '需要：{needs}。', 'item.aiCaution': 'AI 可能会自信地给出错误答案。涉及健康和安全的问题，请对照你资料库中的指南核实它的回答。',
   'item.shelf': '书架', 'item.priority': '优先级', 'item.type': '类型', 'item.license': '许可协议', 'item.source': '发布者',
   'item.choose': '选择', 'item.edition': '版本', 'item.edFallback': '并非所有语言都有；将使用最接近的版本',

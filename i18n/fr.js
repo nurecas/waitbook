@@ -77,7 +77,7 @@ WB.i18n.register('fr', {
   'lib.priority': 'Priorité', 'lib.anyPrio': 'Toutes les priorités', 'lib.type': 'Type', 'lib.anyType': 'Tous les types',
   'lib.count': { one: '{n} élément', many: '{n} éléments', other: '{n} éléments' }, 'lib.empty': 'Aucun élément ne correspond.', 'lib.tryKiwix': 'Rechercher dans toute la bibliothèque Kiwix',
 
-  'item.missing': 'Introuvable', 'item.yourChoice': 'Votre choix', 'item.add': 'Ajouter à mon kit', 'item.remove': 'Retirer de mon kit', 'item.chooseFirst': 'Choisissez d’abord une langue ou une région',
+  'item.missing': 'Introuvable', 'item.gone': 'Kiwix ne propose plus cette archive. Elle reviendra peut-être sous un autre nom.', 'item.goneSearch': 'Rechercher dans la bibliothèque Kiwix', 'item.yourChoice': 'Votre choix', 'item.add': 'Ajouter à mon kit', 'item.remove': 'Retirer de mon kit', 'item.chooseFirst': 'Choisissez d’abord une langue ou une région',
   'item.needs': 'Nécessite : {needs}.', 'item.aiCaution': 'Une IA peut se tromper tout en ayant l’air sûre d’elle. Pour la santé et la sécurité, vérifiez ses réponses avec les guides de votre bibliothèque.',
   'item.shelf': 'Rayon', 'item.priority': 'Priorité', 'item.type': 'Type', 'item.license': 'Licence', 'item.source': 'Éditeur',
   'item.choose': 'Choisir', 'item.edition': 'Édition', 'item.edFallback': 'pas dans toutes les langues ; l’édition la plus proche est utilisée',

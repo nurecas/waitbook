@@ -77,7 +77,7 @@ WB.i18n.register('hi', {
   'lib.priority': 'प्राथमिकता', 'lib.anyPrio': 'कोई भी प्राथमिकता', 'lib.type': 'प्रकार', 'lib.anyType': 'कोई भी प्रकार',
   'lib.count': { one: '{n} आइटम', other: '{n} आइटम' }, 'lib.empty': 'यहाँ कुछ भी मेल नहीं खाता।', 'lib.tryKiwix': 'पूरी Kiwix लाइब्रेरी में खोजें',
 
-  'item.missing': 'नहीं मिला', 'item.yourChoice': 'आपकी पसंद', 'item.add': 'मेरी किट में जोड़ें', 'item.remove': 'मेरी किट से हटाएँ', 'item.chooseFirst': 'पहले कोई भाषा या क्षेत्र चुनें',
+  'item.missing': 'नहीं मिला', 'item.gone': 'Kiwix अब यह आर्काइव नहीं देता। हो सकता है यह किसी दूसरे नाम से वापस आए।', 'item.goneSearch': 'Kiwix लाइब्रेरी में खोजें', 'item.yourChoice': 'आपकी पसंद', 'item.add': 'मेरी किट में जोड़ें', 'item.remove': 'मेरी किट से हटाएँ', 'item.chooseFirst': 'पहले कोई भाषा या क्षेत्र चुनें',
   'item.needs': 'ज़रूरत: {needs}।', 'item.aiCaution': 'AI पूरे भरोसे के साथ भी गलत हो सकता है। स्वास्थ्य और सुरक्षा के मामलों में उसके जवाबों को अपनी लाइब्रेरी की गाइड से मिलाकर देखें।',
   'item.shelf': 'शेल्फ़', 'item.priority': 'प्राथमिकता', 'item.type': 'प्रकार', 'item.license': 'लाइसेंस', 'item.source': 'प्रकाशक',
   'item.choose': 'चुनें', 'item.edition': 'संस्करण', 'item.edFallback': 'हर भाषा में उपलब्ध नहीं; सबसे नज़दीकी संस्करण लिया जाता है',

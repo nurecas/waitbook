@@ -77,7 +77,7 @@ WB.i18n.register('sw', {
   'lib.priority': 'Kipaumbele', 'lib.anyPrio': 'Kipaumbele chochote', 'lib.type': 'Aina', 'lib.anyType': 'Aina yoyote',
   'lib.count': { one: 'kipengee {n}', other: 'vipengee {n}' }, 'lib.empty': 'Hakuna kinacholingana hapa.', 'lib.tryKiwix': 'Tafuta katika maktaba nzima ya Kiwix',
 
-  'item.missing': 'Haikupatikana', 'item.yourChoice': 'Chaguo lako', 'item.add': 'Ongeza kwenye mkoba wangu', 'item.remove': 'Ondoa kwenye mkoba wangu', 'item.chooseFirst': 'Chagua lugha au eneo kwanza',
+  'item.missing': 'Haikupatikana', 'item.gone': 'Kiwix haitoi tena kumbukumbu hii. Huenda ikarudi kwa jina jingine.', 'item.goneSearch': 'Tafuta katika maktaba ya Kiwix', 'item.yourChoice': 'Chaguo lako', 'item.add': 'Ongeza kwenye mkoba wangu', 'item.remove': 'Ondoa kwenye mkoba wangu', 'item.chooseFirst': 'Chagua lugha au eneo kwanza',
   'item.needs': 'Inahitaji: {needs}.', 'item.aiCaution': 'AI inaweza kukosea huku ikionekana kuwa na uhakika. Kwa masuala ya afya na usalama, linganisha majibu yake na miongozo iliyo kwenye maktaba yako.',
   'item.shelf': 'Rafu', 'item.priority': 'Kipaumbele', 'item.type': 'Aina', 'item.license': 'Leseni', 'item.source': 'Mchapishaji',
   'item.choose': 'Chagua', 'item.edition': 'Toleo', 'item.edFallback': 'haipo kwa kila lugha; toleo lililo karibu zaidi linatumika',

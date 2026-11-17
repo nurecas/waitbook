@@ -77,7 +77,7 @@ WB.i18n.register('ru', {
   'lib.priority': 'Приоритет', 'lib.anyPrio': 'Любой приоритет', 'lib.type': 'Тип', 'lib.anyType': 'Любой тип',
   'lib.count': { one: '{n} материал', few: '{n} материала', many: '{n} материалов', other: '{n} материала' }, 'lib.empty': 'Здесь ничего не найдено.', 'lib.tryKiwix': 'Искать во всей библиотеке Kiwix',
 
-  'item.missing': 'Не найдено', 'item.yourChoice': 'Ваш выбор', 'item.add': 'Добавить в мой набор', 'item.remove': 'Убрать из моего набора', 'item.chooseFirst': 'Сначала выберите язык или регион',
+  'item.missing': 'Не найдено', 'item.gone': 'Kiwix больше не предлагает этот архив. Возможно, он вернётся под другим названием.', 'item.goneSearch': 'Искать в библиотеке Kiwix', 'item.yourChoice': 'Ваш выбор', 'item.add': 'Добавить в мой набор', 'item.remove': 'Убрать из моего набора', 'item.chooseFirst': 'Сначала выберите язык или регион',
   'item.needs': 'Требуется: {needs}.', 'item.aiCaution': 'ИИ может уверенно ошибаться. В вопросах здоровья и безопасности сверяйте его ответы с руководствами в вашей библиотеке.',
   'item.shelf': 'Полка', 'item.priority': 'Приоритет', 'item.type': 'Тип', 'item.license': 'Лицензия', 'item.source': 'Издатель',
   'item.choose': 'Выберите', 'item.edition': 'Вариант', 'item.edFallback': 'есть не на всех языках; используется ближайший вариант',
