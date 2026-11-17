@@ -1,0 +1,24 @@
+/* Paper output: the kit manifest, or every field card. Black on white, no navigation, links spelled out. */
+@page { margin: 14mm; }
+html, body { background: #fff !important; color: #000 !important; font-size: 10.5pt; }
+body { background-image: none !important; }
+.masthead, .spine, .tabbar, .ledger-foot, .skip, .toast, .sheet-host, .btn, .btn-row, .export-tabs, #expPanel, .toolbar, .tabs-index, .crumbs, .wizard-nav, .map-wrap, .icon-btn, .tick-hit input, .numbers-pad, .note { display: none !important; }
+.shell { display: block !important; }
+.page { padding: 0 !important; }
+.page > * { max-width: none !important; }
+a { color: #000 !important; text-decoration: none !important; }
+.box, .card-sheet, .index-card { box-shadow: none !important; }
+h1 { font-size: 20pt; }
+.row { break-inside: avoid; grid-template-columns: 1.5rem 1fr 6rem !important; }
+.row .tick-hit::before { content: "☐"; font-size: 13pt; }
+.row-desc { display: none; }
+.hl-text { background: none !important; }
+.print-only { display: none; }
+
+/* Print all field cards: only the cards, one per page. */
+html.print-cards .page > :not(.all-cards) { display: none !important; }
+html.print-cards .all-cards { display: block !important; }
+html.print-cards .card-sheet { break-after: page; border: 1.5pt solid #000; max-width: none; }
+.card-sheet { border: 1.5pt solid #000; }
+.card-block.flags { border-color: #000 !important; background: #fff !important; }
+.card-block.flags h2 { color: #000 !important; }

@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:dc="http://purl.org/dc/terms/"
+      xmlns:opds="https://specs.opds.io/opds-1.2"
+      xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+  <id>03765057-d388-4411-3b92-61e3709eb0ee</id>
+
+  <link rel="self"
+        href="/catalog/v2/entries?count=-1"
+        type="application/atom+xml;profile=opds-catalog;kind=acquisition"/>
+  <link rel="start"
+        href="/catalog/v2/root.xml"
+        type="application/atom+xml;profile=opds-catalog;kind=navigation"/>
+  <link rel="up"
+        href="/catalog/v2/root.xml"
+        type="application/atom+xml;profile=opds-catalog;kind=navigation"/>
+
+  <title>Filtered Entries (count=-1)</title>
+  <updated>2026-09-29T12:19:47Z</updated>
+  <totalResults>23</totalResults>
+  <startIndex>0</startIndex>
+  <itemsPerPage>23</itemsPerPage>
+  <entry>
+    <id>urn:uuid:00be15d4-7231-6bf3-d02e-968b100d2cca</id>
+    <title>MDWiki Medical Encyclopedia</title>
+    <updated>2025-11-12T00:00:00Z</updated>
+    <summary>Healthcare articles curated by WikiProjectMed</summary>
+    <language>eng</language>
+    <name>mdwiki_en_all</name>
+    <flavour>maxi</flavour>
+    <category></category>
+    <tags>medical;mdwiki;_pictures:yes;_videos:no;_details:yes;_ftindex:yes</tags>
+    <articleCount>363797</articleCount>
+    <mediaCount>109499</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/00be15d4-7231-6bf3-d02e-968b100d2cca/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/mdwiki_en_all_maxi_2025-11" />
+    <author>
+      <name>Mdwiki</name>
+    </author>
+    <publisher>
+      <name>WikiProjectMed</name>
+    </publisher>
+    <dc:issued>2025-11-12T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/other/mdwiki_en_all_maxi_2025-11.zim.meta4" length="2302838784" />
+  </entry>
+  <entry>
+    <id>urn:uuid:085aee9e-2680-fe36-d685-6aef34e4dbaa</id>
+    <title>France</title>
+    <updated>2026-06-10T00:00:00Z</updated>
+    <summary>Full map, including roads and landmarks</summary>
+    <language>eng</language>
+    <name>maps_en_france</name>
+    <flavour></flavour>
+    <category></category>
+    <tags>_sw:no;_ftindex:no;_pictures:yes;_videos:no;_details:yes</tags>
+    <articleCount>53483</articleCount>
+    <mediaCount>3403</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/085aee9e-2680-fe36-d685-6aef34e4dbaa/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/maps_en_france_2026-06" />
+    <author>
+      <name>openZIM</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-06-10T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/maps/maps_en_france_2026-06.zim.meta4" length="5846182912" />
+  </entry>
+  <entry>
+    <id>urn:uuid:0e321673-038b-dba3-0470-c30430c4a24b</id>
+    <title>WikiMed Medical Encyclopedia</title>
+    <updated>2026-04-11T00:00:00Z</updated>
+    <summary>The largest medical encyclopedia, from Wikipedia</summary>
+    <language>eng</language>
+    <name>wikipedia_en_medicine</name>
+    <flavour>mini</flavour>
+    <category>wikipedia</category>
+    <tags>wikipedia;_category:wikipedia;_pictures:no;_videos:no;_details:no;_ftindex:yes</tags>
+    <articleCount>362501</articleCount>
+    <mediaCount>318</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/0e321673-038b-dba3-0470-c30430c4a24b/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/wikipedia_en_medicine_mini_2026-04" />
+    <author>
+      <name>Wikipedia</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-04-11T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/wikipedia/wikipedia_en_medicine_mini_2026-04.zim.meta4" length="162855936" />
+  </entry>
+  <entry>
+    <id>urn:uuid:2a517a3f-68d0-4f27-508f-20a7ed5fd4f1</id>
+    <title>WikEM</title>
+    <updated>2026-07-24T00:00:00Z</updated>
+    <summary>The world&apos;s largest emergency medicine open-access resource</summary>
+    <language>eng</language>
+    <name>wikem_en_all</name>
+    <flavour>maxi</flavour>
+    <category></category>
+    <tags>medicine;wikem;_pictures:yes;_videos:no;_details:yes;_ftindex:yes</tags>
+    <articleCount>107945</articleCount>
+    <mediaCount>2778</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/2a517a3f-68d0-4f27-508f-20a7ed5fd4f1/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/wikem_en_all_maxi_2026-07" />
+    <author>
+      <name>Wikem</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-07-24T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/other/wikem_en_all_maxi_2026-07.zim.meta4" length="374632448" />
+  </entry>
+  <entry>
+    <id>urn:uuid:2d7d9c72-e77d-3ce3-b8f6-140790d36f7a</id>
+    <title>Wikivoyage</title>
+    <updated>2026-09-13T00:00:00Z</updated>
+    <summary>The collaborative travel guide</summary>
+    <language>eng</language>
+    <name>wikivoyage_en_all</name>
+    <flavour>maxi</flavour>
+    <category>wikivoyage</category>
+    <tags>wikivoyage;_category:wikivoyage;_pictures:yes;_videos:no;_details:yes;_ftindex:yes</tags>
+    <articleCount>68182</articleCount>
+    <mediaCount>90778</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/2d7d9c72-e77d-3ce3-b8f6-140790d36f7a/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/wikivoyage_en_all_maxi_2026-09" />
+    <author>
+      <name>Wikivoyage</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-09-13T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/wikivoyage/wikivoyage_en_all_maxi_2026-09.zim.meta4" length="1071169536" />
+  </entry>
+  <entry>
+    <id>urn:uuid:2e17beb8-4d08-4734-75d4-6f56f73f3610</id>
+    <title>Water Treatment Library</title>
+    <updated>2024-08-29T00:00:00Z</updated>
+    <summary>Resources about water collection and purification</summary>
+    <language>eng</language>
+    <name>zimgit-water_en</name>
+    <flavour></flavour>
+    <category></category>
+    <tags>preppers;_ftindex:no;_pictures:yes;_videos:yes;_details:yes</tags>
+    <articleCount>1</articleCount>
+    <mediaCount>369</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/2e17beb8-4d08-4734-75d4-6f56f73f3610/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/zimgit-water_en_2024-08" />
+    <author>
+      <name>Various</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2024-08-29T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/other/zimgit-water_en_2024-08.zim.meta4" length="20925440" />
+  </entry>
+  <entry>
+    <id>urn:uuid:31b210ed-4584-ae30-88d8-773bfa3af6d7</id>
+    <title>PhET Interactive Simulations</title>
+    <updated>2026-08-25T00:00:00Z</updated>
+    <summary>Interactive simulations for Science and Math</summary>
+    <language>eng</language>
+    <name>phet_en_all</name>
+    <flavour></flavour>
+    <category>phet</category>
+    <tags>_category:phet;_pictures:yes;_videos:no;_ftindex:no;_details:yes</tags>
+    <articleCount>120</articleCount>
+    <mediaCount>141</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/31b210ed-4584-ae30-88d8-773bfa3af6d7/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/phet_en_all_2026-08" />
+    <author>
+      <name>University of Colorado</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-08-25T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/phet/phet_en_all_2026-08.zim.meta4" length="108981248" />
+  </entry>
+  <entry>
+    <id>urn:uuid:3d0296a5-9f7d-3441-c873-069a81f9037e</id>
+    <title>PhET Interactive Simulations</title>
+    <updated>2026-08-25T00:00:00Z</updated>
+    <summary>Interactive simulations for Science and Math</summary>
+    <language>swa</language>
+    <name>phet_sw_all</name>
+    <flavour></flavour>
+    <category>phet</category>
+    <tags>_category:phet;_pictures:yes;_videos:no;_ftindex:no;_details:yes</tags>
+    <articleCount>116</articleCount>
+    <mediaCount>137</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/3d0296a5-9f7d-3441-c873-069a81f9037e/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/phet_sw_all_2026-08" />
+    <author>
+      <name>University of Colorado</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-08-25T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/phet/phet_sw_all_2026-08.zim.meta4" length="106593280" />
+  </entry>
+  <entry>
+    <id>urn:uuid:41523054-484b-777b-8caa-032da40ee17d</id>
+    <title>Wikipedia</title>
+    <updated>2026-07-05T00:00:00Z</updated>
+    <summary>toleo la nje ya mkondo la Wikipedia kwa Kiswahili</summary>
+    <language>swa</language>
+    <name>wikipedia_sw_all</name>
+    <flavour>nopic</flavour>
+    <category>wikipedia</category>
+    <tags>wikipedia;_category:wikipedia;_pictures:no;_videos:no;_details:yes;_ftindex:yes</tags>
+    <articleCount>150493</articleCount>
+    <mediaCount>229</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/41523054-484b-777b-8caa-032da40ee17d/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/wikipedia_sw_all_nopic_2026-07" />
+    <author>
+      <name>Wikipedia</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-07-05T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/wikipedia/wikipedia_sw_all_nopic_2026-07.zim.meta4" length="221046784" />
+  </entry>
+  <entry>
+    <id>urn:uuid:4c32c754-a4e0-88bc-fb1b-1d0abf710d98</id>
+    <title>iFixit en Français</title>
+    <updated>2026-03-08T00:00:00Z</updated>
+    <summary>iFixit est une communauté de personnes réparties dans le monde et qui s&apos;entraid…</summary>
+    <language>fra</language>
+    <name>ifixit_fr_all</name>
+    <flavour></flavour>
+    <category>iFixit</category>
+    <tags>_videos:yes;_pictures:yes;_category:iFixit;iFixit;_ftindex:no;_details:yes</tags>
+    <articleCount>105678</articleCount>
+    <mediaCount>581108</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/4c32c754-a4e0-88bc-fb1b-1d0abf710d98/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/ifixit_fr_all_2026-03" />
+    <author>
+      <name>iFixit</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-03-08T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/ifixit/ifixit_fr_all_2026-03.zim.meta4" length="3652281344" />
+  </entry>
+  <entry>
+    <id>urn:uuid:4dc2d539-98f7-0b76-7256-0943f0c52e60</id>
+    <title>Project Gutenberg Library</title>
+    <updated>2026-03-06T00:00:00Z</updated>
+    <summary>Agriculture</summary>
+    <language>eng</language>
+    <name>gutenberg_en_lcc-s</name>
+    <flavour></flavour>
+    <category>gutenberg</category>
+    <tags>_category:gutenberg;gutenberg;_ftindex:no;_pictures:yes;_videos:yes;_details:yes</tags>
+    <articleCount>1258</articleCount>
+    <mediaCount>31526</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/4dc2d539-98f7-0b76-7256-0943f0c52e60/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/gutenberg_en_lcc-s_2026-03" />
+    <author>
+      <name>gutenberg.org</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-03-06T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/gutenberg/gutenberg_en_lcc-s_2026-03.zim.meta4" length="4532683776" />
+  </entry>
+  <entry>
+    <id>urn:uuid:5911a18d-2a57-329f-8bf8-435e7ed0cc08</id>
+    <title>MDWiki Medical Encyclopedia</title>
+    <updated>2025-11-14T00:00:00Z</updated>
+    <summary>Healthcare articles curated by WikiProjectMed</summary>
+    <language>eng</language>
+    <name>mdwiki_en_all</name>
+    <flavour></flavour>
+    <category></category>
+    <tags>medical;mdwiki;_details:yes;_ftindex:yes;_pictures:yes;_videos:yes</tags>
+    <articleCount>363797</articleCount>
+    <mediaCount>112412</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/5911a18d-2a57-329f-8bf8-435e7ed0cc08/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/mdwiki_en_all_2025-11" />
+    <author>
+      <name>Mdwiki</name>
+    </author>
+    <publisher>
+      <name>WikiProjectMed</name>
+    </publisher>
+    <dc:issued>2025-11-14T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/other/mdwiki_en_all_2025-11.zim.meta4" length="10752257024" />
+  </entry>
+  <entry>
+    <id>urn:uuid:5d963c1c-a44b-f83c-68e4-dec4c71374ed</id>
+    <title>WikiMed Medical Encyclopedia</title>
+    <updated>2026-04-11T00:00:00Z</updated>
+    <summary>The largest medical encyclopedia, from Wikipedia</summary>
+    <language>eng</language>
+    <name>wikipedia_en_medicine</name>
+    <flavour>nopic</flavour>
+    <category>wikipedia</category>
+    <tags>wikipedia;_category:wikipedia;_pictures:no;_videos:no;_details:yes;_ftindex:yes</tags>
+    <articleCount>362501</articleCount>
+    <mediaCount>5304</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/5d963c1c-a44b-f83c-68e4-dec4c71374ed/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/wikipedia_en_medicine_nopic_2026-04" />
+    <author>
+      <name>Wikipedia</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-04-11T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/wikipedia/wikipedia_en_medicine_nopic_2026-04.zim.meta4" length="862376960" />
+  </entry>
+  <entry>
+    <id>urn:uuid:5e384b1b-861d-9c58-6144-079a74d383e0</id>
+    <title>Wikipedia</title>
+    <updated>2026-07-05T00:00:00Z</updated>
+    <summary>toleo la nje ya mkondo la Wikipedia kwa Kiswahili</summary>
+    <language>swa</language>
+    <name>wikipedia_sw_all</name>
+    <flavour>maxi</flavour>
+    <category>wikipedia</category>
+    <tags>wikipedia;_category:wikipedia;_pictures:yes;_videos:no;_details:yes;_ftindex:yes</tags>
+    <articleCount>150493</articleCount>
+    <mediaCount>64439</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/5e384b1b-861d-9c58-6144-079a74d383e0/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/wikipedia_sw_all_maxi_2026-07" />
+    <author>
+      <name>Wikipedia</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-07-05T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/wikipedia/wikipedia_sw_all_maxi_2026-07.zim.meta4" length="816162816" />
+  </entry>
+  <entry>
+    <id>urn:uuid:7d3391aa-c375-a479-c5de-7d2916058123</id>
+    <title>Amateur Radio Q&amp;A</title>
+    <updated>2026-08-02T00:00:00Z</updated>
+    <summary>Stack Exchange Q&amp;A for amateur radio enthusiasts</summary>
+    <language>eng</language>
+    <name>ham.stackexchange.com_en_all</name>
+    <flavour></flavour>
+    <category>stack_exchange</category>
+    <tags>_category:stack_exchange;stack_exchange;_videos:no;_details:no;_ftindex:yes;_pictures:yes</tags>
+    <articleCount>9238</articleCount>
+    <mediaCount>3610</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/7d3391aa-c375-a479-c5de-7d2916058123/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/ham.stackexchange.com_en_all_2026-08" />
+    <author>
+      <name>Stack Exchange</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-08-02T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/stack_exchange/ham.stackexchange.com_en_all_2026-08.zim.meta4" length="75931648" />
+  </entry>
+  <entry>
+    <id>urn:uuid:8c8b99c5-b74d-0394-e2e5-ece60123b369</id>
+    <title>Wikipédia</title>
+    <updated>2026-05-18T00:00:00Z</updated>
+    <summary>L&apos;encyclopédie libre</summary>
+    <language>fra</language>
+    <name>wikipedia_fr_all</name>
+    <flavour>nopic</flavour>
+    <category>wikipedia</category>
+    <tags>wikipedia;_category:wikipedia;_pictures:no;_videos:no;_details:yes;_ftindex:yes</tags>
+    <articleCount>4587621</articleCount>
+    <mediaCount>227460</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/8c8b99c5-b74d-0394-e2e5-ece60123b369/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/wikipedia_fr_all_nopic_2026-05" />
+    <author>
+      <name>Wikipedia</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-05-18T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/wikipedia/wikipedia_fr_all_nopic_2026-05.zim.meta4" length="12912823296" />
+  </entry>
+  <entry>
+    <id>urn:uuid:a8a033e2-301b-863e-3c63-85d7a32bf051</id>
+    <title>Wikipédia</title>
+    <updated>2026-05-18T00:00:00Z</updated>
+    <summary>L&apos;encyclopédie libre</summary>
+    <language>fra</language>
+    <name>wikipedia_fr_all</name>
+    <flavour>mini</flavour>
+    <category>wikipedia</category>
+    <tags>wikipedia;_category:wikipedia;_pictures:no;_videos:no;_details:no;_ftindex:yes</tags>
+    <articleCount>4587655</articleCount>
+    <mediaCount>15219</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/a8a033e2-301b-863e-3c63-85d7a32bf051/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/wikipedia_fr_all_mini_2026-05" />
+    <author>
+      <name>Wikipedia</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-05-18T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/wikipedia/wikipedia_fr_all_mini_2026-05.zim.meta4" length="3584080896" />
+  </entry>
+  <entry>
+    <id>urn:uuid:b697b4af-c3ec-ea97-3c5d-52c84ca58464</id>
+    <title>Kenya</title>
+    <updated>2026-06-04T00:00:00Z</updated>
+    <summary>Full map, including roads and landmarks</summary>
+    <language>eng</language>
+    <name>maps_en_kenya</name>
+    <flavour></flavour>
+    <category></category>
+    <tags>_sw:no;_ftindex:no;_pictures:yes;_videos:no;_details:yes</tags>
+    <articleCount>1186</articleCount>
+    <mediaCount>3403</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/b697b4af-c3ec-ea97-3c5d-52c84ca58464/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/maps_en_kenya_2026-06" />
+    <author>
+      <name>openZIM</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-06-04T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/maps/maps_en_kenya_2026-06.zim.meta4" length="404626432" />
+  </entry>
+  <entry>
+    <id>urn:uuid:be20c57a-317a-800d-bfaf-c24cc6bb08c1</id>
+    <title>WikEM</title>
+    <updated>2026-07-24T00:00:00Z</updated>
+    <summary>The world&apos;s largest emergency medicine open-access resource</summary>
+    <language>eng</language>
+    <name>wikem_en_all</name>
+    <flavour>nopic</flavour>
+    <category></category>
+    <tags>medicine;wikem;_pictures:no;_videos:no;_details:yes;_ftindex:yes</tags>
+    <articleCount>107952</articleCount>
+    <mediaCount>38</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/be20c57a-317a-800d-bfaf-c24cc6bb08c1/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/wikem_en_all_nopic_2026-07" />
+    <author>
+      <name>Wikem</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-07-24T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/other/wikem_en_all_nopic_2026-07.zim.meta4" length="346946560" />
+  </entry>
+  <entry>
+    <id>urn:uuid:bff12bdb-1fac-6ab0-ed6c-9f5f030722b3</id>
+    <title>iFixit in English</title>
+    <updated>2025-12-21T00:00:00Z</updated>
+    <summary>iFixit is a global community of people helping each other repair things. Let&apos;s …</summary>
+    <language>eng</language>
+    <name>ifixit_en_all</name>
+    <flavour></flavour>
+    <category>iFixit</category>
+    <tags>_category:iFixit;iFixit;_pictures:yes;_videos:yes;_ftindex:no;_details:yes</tags>
+    <articleCount>103480</articleCount>
+    <mediaCount>575002</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/bff12bdb-1fac-6ab0-ed6c-9f5f030722b3/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/ifixit_en_all_2025-12" />
+    <author>
+      <name>iFixit</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2025-12-21T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/ifixit/ifixit_en_all_2025-12.zim.meta4" length="3570696192" />
+  </entry>
+  <entry>
+    <id>urn:uuid:c5181ff1-fa01-053c-cf3c-9c4c66259687</id>
+    <title>Wikivoyage</title>
+    <updated>2026-09-13T00:00:00Z</updated>
+    <summary>The collaborative travel guide</summary>
+    <language>eng</language>
+    <name>wikivoyage_en_all</name>
+    <flavour>nopic</flavour>
+    <category>wikivoyage</category>
+    <tags>wikivoyage;_category:wikivoyage;_pictures:no;_videos:no;_details:yes;_ftindex:yes</tags>
+    <articleCount>68182</articleCount>
+    <mediaCount>132</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/c5181ff1-fa01-053c-cf3c-9c4c66259687/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/wikivoyage_en_all_nopic_2026-09" />
+    <author>
+      <name>Wikivoyage</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-09-13T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/wikivoyage/wikivoyage_en_all_nopic_2026-09.zim.meta4" length="272495616" />
+  </entry>
+  <entry>
+    <id>urn:uuid:d2587312-c24f-d89f-f46d-54a4a480e3ef</id>
+    <title>Wikipédia</title>
+    <updated>2026-05-18T00:00:00Z</updated>
+    <summary>L&apos;encyclopédie libre</summary>
+    <language>fra</language>
+    <name>wikipedia_fr_all</name>
+    <flavour>maxi</flavour>
+    <category>wikipedia</category>
+    <tags>wikipedia;_category:wikipedia;_pictures:yes;_videos:no;_details:yes;_ftindex:yes</tags>
+    <articleCount>4587563</articleCount>
+    <mediaCount>4408540</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/d2587312-c24f-d89f-f46d-54a4a480e3ef/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/wikipedia_fr_all_maxi_2026-05" />
+    <author>
+      <name>Wikipedia</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-05-18T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/wikipedia/wikipedia_fr_all_maxi_2026-05.zim.meta4" length="55438794752" />
+  </entry>
+  <entry>
+    <id>urn:uuid:fb7d092d-a93a-9689-8d81-510a610e0110</id>
+    <title>WikiMed Medical Encyclopedia</title>
+    <updated>2026-04-11T00:00:00Z</updated>
+    <summary>The largest medical encyclopedia, from Wikipedia</summary>
+    <language>eng</language>
+    <name>wikipedia_en_medicine</name>
+    <flavour>maxi</flavour>
+    <category>wikipedia</category>
+    <tags>wikipedia;_category:wikipedia;_pictures:yes;_videos:no;_details:yes;_ftindex:yes</tags>
+    <articleCount>362501</articleCount>
+    <mediaCount>100895</mediaCount>
+    <link rel="http://opds-spec.org/image/thumbnail"
+          href="/catalog/v2/illustration/fb7d092d-a93a-9689-8d81-510a610e0110/?size=48"
+          type="image/png;width=48;height=48;scale=1"/>
+    <link type="text/html" href="https://browse.library.kiwix.org/content/wikipedia_en_medicine_maxi_2026-04" />
+    <author>
+      <name>Wikipedia</name>
+    </author>
+    <publisher>
+      <name>openZIM</name>
+    </publisher>
+    <dc:issued>2026-04-11T00:00:00Z</dc:issued>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="https://lb.download.kiwix.org/zim/wikipedia/wikipedia_en_medicine_maxi_2026-04.zim.meta4" length="2215521280" />
+  </entry>
+</feed>

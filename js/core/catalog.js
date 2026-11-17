@@ -127,7 +127,7 @@
   function editionsFor(it, value) {
     var eds = editions(it);
     var a = axis(it);
-    if (!it.flavours) return eds;
+    if (!it.flavours || !it.kiwix) return eds;
     return eds.filter(function (e) {
       if (a === 'lang' && isPattern(it.kiwix)) {
         var code = codeForLang(it.kiwix, value);
@@ -197,8 +197,9 @@
       return out;
     }
     if (it.pmtiles) {
+      var z = parseInt(String(ed).replace(/\D/g, ''), 10) || 12;
       vals.forEach(function (v) {
-        out.push({ key: 'm:' + it.id + ':' + (v || 'custom'), kind: 'pmtiles', region: v, name: 'map-' + String(v || 'area').toLowerCase() + '.pmtiles', size: null, url: null });
+        out.push({ key: 'm:' + it.id + ':' + (v || 'custom'), kind: 'pmtiles', region: v, zoom: z, name: 'map-' + String(v || 'area').toLowerCase() + '.pmtiles', size: estimateMap(regionBox(v), z), est: true, url: null });
       });
       return out;
     }
@@ -230,6 +231,24 @@
     if (mine.length) return it.oneLang ? mine.slice(0, 1) : mine;
     if (it.fallbackEn !== false && have.indexOf('en') !== -1) return ['en'];
     return have.slice(0, 1);
+  }
+
+  // Rough size of a Protomaps extract: the planet at that zoom (about 120 GB at z15, halving per level) times the
+  // share of the Earth's surface in the box, weighted up because mapped detail concentrates on land and in towns.
+  var EARTH_KM2 = 510e6;
+  function estimateMap(b, z) {
+    if (!b) return null;
+    var planet = 120e9 / Math.pow(2, 15 - Math.min(15, Math.max(0, z)));
+    var w = b[0] > b[2] ? (180 - b[0]) + (b[2] + 180) : b[2] - b[0];
+    var midLat = (b[1] + b[3]) / 2 * Math.PI / 180;
+    var km2 = Math.abs(w * 111.32 * Math.cos(midLat)) * Math.abs((b[3] - b[1]) * 110.57);
+    var share = Math.min(1, (km2 / EARTH_KM2) * 6);
+    return Math.max(20e6, Math.round(planet * share));
+  }
+  function regionBox(v) {
+    if (v === '@world') return [-180, -85, 180, 85];
+    var c = (root.WB_COUNTRIES || {})[v];
+    return c && c.b ? c.b : null;
   }
 
   function sizeOf(files) {
@@ -288,7 +307,7 @@
     axis: axis, editions: editions, editionsFor: editionsFor, defaultEdition: defaultEdition, editionObj: editionObj,
     stemFor: stemFor, langs: langs, kiwixFacts: kiwixFacts, filesFor: filesFor, defaultValues: defaultValues,
     sizeOf: sizeOf, matchesLangs: matchesLangs, search: search, filter: filter, allKiwixRefs: allKiwixRefs,
-    isPattern: isPattern, regionList: regionList, codeForLang: codeForLang,
+    isPattern: isPattern, regionList: regionList, codeForLang: codeForLang, estimateMap: estimateMap, regionBox: regionBox,
   };
   WB.catalog = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

@@ -194,7 +194,7 @@
         license: 'CC BY-SA 4.0', tags: ['engineering', 'structures'], opens: KIWIX },
 
       /* ---------------- 05 Energy & power ---------------- */
-      { id: 'energypedia', shelf: 'energy', p: 1, kind: 'zim', kiwix: 'energypedia_en_all_{flavour}', flavours: F2, axis: 'none',
+      { id: 'energypedia', shelf: 'energy', p: 2, kind: 'zim', kiwix: 'energypedia_en_all_{flavour}', flavours: F2, axis: 'none',
         title: 'energypedia', by: 'energypedia community',
         desc: 'Practical knowledge on solar home systems, mini-grids, clean cooking, biogas and energy access in developing regions.',
         license: 'See source', home: 'https://energypedia.info/', tags: ['solar', 'batteries', 'biogas', 'cookstove', 'electricity'], opens: KIWIX },
@@ -213,7 +213,7 @@
         license: 'See source', tags: ['énergie', 'climat'], opens: KIWIX },
 
       /* ---------------- 06 Repair & making ---------------- */
-      { id: 'ifixit', shelf: 'repair', p: 1, kind: 'zim', kiwix: 'ifixit_{lang}_all',
+      { id: 'ifixit', shelf: 'repair', p: 2, kind: 'zim', kiwix: 'ifixit_{lang}_all',
         title: 'iFixit repair guides', by: 'iFixit community',
         desc: 'Step-by-step photo guides for repairing phones, laptops, appliances, vehicles and tools, plus answers to common problems. In 12 languages.',
         license: 'CC BY-NC-SA 3.0', home: 'https://www.ifixit.com/', tags: ['repair', 'phone', 'laptop', 'appliance'], opens: KIWIX },
@@ -301,11 +301,11 @@
         license: 'CC BY-SA 4.0', tags: ['sdr', 'radio'], opens: KIWIX },
 
       /* ---------------- 09 Maps & travel ---------------- */
-      { id: 'kiwix-maps', shelf: 'maps', p: 1, kind: 'map', axis: 'region', kiwix: 'maps_en_{region}',
+      { id: 'kiwix-maps', shelf: 'maps', p: 1, kind: 'map', axis: 'region', kiwix: 'maps_en_{region}', alt: 'pmtiles-area',
         title: 'Offline map of your country', by: 'OpenStreetMap contributors, packaged by Kiwix',
         desc: 'A full OpenStreetMap map — roads, places and landmarks — packaged for Kiwix. Most countries have their own file; others use their continent. Open it in the Kiwix app on any device.',
         license: 'ODbL (OpenStreetMap)', home: 'https://www.openstreetmap.org/copyright', tags: ['map', 'roads', 'navigation', 'openstreetmap'], opens: KIWIX },
-      { id: 'pmtiles-area', shelf: 'maps', p: 2, kind: 'map', axis: 'region', pmtiles: true,
+      { id: 'pmtiles-area', shelf: 'maps', p: 2, kind: 'map', axis: 'region', pmtiles: true, flavours: [{ id: 'z14' }, { id: 'z12' }, { id: 'z10' }], defaultEdition: 'z12',
         title: 'Vector map of any area, for the Waitbook map', by: 'Protomaps daily build of OpenStreetMap',
         desc: "A single .pmtiles file cut from the Protomaps planet for your country (or any box you draw), at the detail you choose. Open it in Waitbook's own map screen on any device — no app needed. Made by the download script with the pmtiles tool.",
         license: 'ODbL (OpenStreetMap)', home: 'https://docs.protomaps.com/basemaps/downloads', tags: ['map', 'pmtiles', 'openstreetmap'], opens: ['waitbook-map'] },
@@ -324,11 +324,11 @@
         license: 'ODbL', tags: ['gis', 'openstreetmap', 'data'], langs: ['*'] },
 
       /* ---------------- 10 Encyclopedias & dictionaries ---------------- */
-      { id: 'wikipedia', shelf: 'reference', p: 1, kind: 'zim', kiwix: 'wikipedia_{lang}_all_{flavour}', flavours: F3, defaultEdition: 'nopic',
+      { id: 'wikipedia', shelf: 'reference', p: 1, kind: 'zim', kiwix: 'wikipedia_{lang}_all_{flavour}', flavours: F3, defaultEdition: 'nopic', alt: 'wikipedia-top',
         title: 'Wikipedia', by: 'Wikipedia volunteers, packaged by Kiwix',
         desc: 'The whole encyclopedia in your language: with pictures, text only, or just the introduction of each article. Available in about 300 languages; sizes range from megabytes to over 100 GB.',
         license: 'CC BY-SA 4.0', tags: ['encyclopedia', 'everything'], opens: KIWIX },
-      { id: 'wikipedia-top', shelf: 'reference', p: 2, kind: 'zim', kiwix: 'wikipedia_{lang}_top_{flavour}', flavours: F3, defaultEdition: 'maxi',
+      { id: 'wikipedia-top', shelf: 'reference', p: 2, kind: 'zim', kiwix: 'wikipedia_{lang}_top_{flavour}', flavours: F3, defaultEdition: 'maxi', altOf: 'wikipedia',
         title: 'Best of Wikipedia (top 50,000 articles)', by: 'Wikipedia volunteers, packaged by Kiwix',
         desc: 'The most-read 50,000 articles with pictures — a fraction of the full size, for phones and small cards.',
         license: 'CC BY-SA 4.0', tags: ['encyclopedia', 'small'], opens: KIWIX },
@@ -469,23 +469,23 @@
       { id: 'gemma4-e2b', shelf: 'ai', p: 2, kind: 'model', hf: { repo: 'unsloth/gemma-4-E2B-it-GGUF', file: 'gemma-4-E2B-it-Q4_K_M.gguf' }, size: 3.2 * GB, est: true,
         title: 'Gemma 4 E2B — small AI for phones', by: 'Google DeepMind (GGUF by Unsloth)',
         desc: 'A small multilingual model (trained on 140+ languages) that runs on recent phones with 8 GB of memory and on most laptops. Answers questions and explains things offline — but can be wrong: check anything that matters against the library.',
-        license: 'Gemma licence — see the model card', home: 'https://ai.google.dev/gemma', tags: ['ai', 'chat', 'phone'], ollama: 'gemma4:e2b', opens: ['pocketpal', 'edge-gallery', 'ollama', 'jan', 'lmstudio'], needs: '8 GB memory' },
+        license: 'Gemma licence — see the model card', home: 'https://ai.google.dev/gemma', tags: ['ai', 'chat', 'phone'], group: 'ai', devices: ['phone', 'tablet', 'drive', 'server'], ollama: 'gemma4:e2b', opens: ['pocketpal', 'edge-gallery', 'ollama', 'jan', 'lmstudio'], needs: '8 GB memory' },
       { id: 'gemma4-e4b', shelf: 'ai', p: 2, kind: 'model', hf: { repo: 'unsloth/gemma-4-E4B-it-GGUF', file: 'gemma-4-E4B-it-Q4_K_M.gguf' }, size: 5.3 * GB, est: true,
         title: 'Gemma 4 E4B — AI for laptops and tablets', by: 'Google DeepMind (GGUF by Unsloth)',
         desc: 'A stronger multilingual model for computers with 12–16 GB of memory and high-end tablets. Same caution: useful, not authoritative.',
-        license: 'Gemma licence — see the model card', home: 'https://ai.google.dev/gemma', tags: ['ai', 'chat', 'laptop'], ollama: 'gemma4:e4b', opens: ['ollama', 'jan', 'lmstudio', 'pocketpal'], needs: '12–16 GB memory' },
+        license: 'Gemma licence — see the model card', home: 'https://ai.google.dev/gemma', tags: ['ai', 'chat', 'laptop'], group: 'ai', devices: ['computer', 'drive', 'server', 'tablet'], ollama: 'gemma4:e4b', opens: ['ollama', 'jan', 'lmstudio', 'pocketpal'], needs: '12–16 GB memory' },
       { id: 'gemma4-26b', shelf: 'ai', p: 3, kind: 'model', hf: { repo: 'unsloth/gemma-4-26B-A4B-it-GGUF', file: 'gemma-4-26B-A4B-it-UD-Q4_K_M.gguf' }, size: 16947541728,
         title: 'Gemma 4 26B A4B — AI for strong computers', by: 'Google DeepMind (GGUF by Unsloth)',
         desc: 'A mixture-of-experts model that runs about as fast as a 4B model but answers much better. Needs roughly 20 GB of free memory (or a large GPU). This exact file is the one Lastbook uses.',
-        license: 'Gemma licence — see the model card', home: 'https://ai.google.dev/gemma', tags: ['ai', 'chat', 'desktop'], opens: ['ollama', 'jan', 'lmstudio'], needs: '20+ GB memory', sha256: 'f2c28b3dc4776931ac6f879e11f203dec637ea0f14267a86ec8f6165f63f293f' },
+        license: 'Gemma licence — see the model card', home: 'https://ai.google.dev/gemma', tags: ['ai', 'chat', 'desktop'], opens: ['ollama', 'jan', 'lmstudio'], group: 'ai', devices: ['computer', 'drive', 'server'], needs: '20+ GB memory', sha256: 'f2c28b3dc4776931ac6f879e11f203dec637ea0f14267a86ec8f6165f63f293f' },
       { id: 'qwen35-4b', shelf: 'ai', p: 3, kind: 'model', hf: { repo: 'bartowski/Qwen_Qwen3.5-4B-GGUF', file: 'Qwen_Qwen3.5-4B-Q4_K_M.gguf' }, size: 2.7 * GB, est: true,
         title: 'Qwen 3.5 4B — small multilingual AI', by: 'Alibaba Qwen team (GGUF by bartowski)',
         desc: 'A compact multilingual model, strong in Chinese and many other languages, for phones with 8 GB and laptops.',
-        license: 'Apache 2.0 (see the model card)', home: 'https://huggingface.co/Qwen', tags: ['ai', 'chat', 'chinese'], opens: ['pocketpal', 'ollama', 'jan', 'lmstudio'], needs: '6–8 GB memory' },
+        license: 'Apache 2.0 (see the model card)', home: 'https://huggingface.co/Qwen', tags: ['ai', 'chat', 'chinese'], opens: ['pocketpal', 'ollama', 'jan', 'lmstudio'], group: 'ai', devices: ['phone', 'tablet'], needs: '6–8 GB memory' },
       { id: 'qwen35-9b', shelf: 'ai', p: 3, kind: 'model', hf: { repo: 'bartowski/Qwen_Qwen3.5-9B-GGUF', file: 'Qwen_Qwen3.5-9B-Q4_K_M.gguf' }, size: 5.7 * GB, est: true,
         title: 'Qwen 3.5 9B — multilingual AI for laptops', by: 'Alibaba Qwen team (GGUF by bartowski)',
         desc: 'A capable multilingual model for computers with 16 GB of memory.',
-        license: 'Apache 2.0 (see the model card)', home: 'https://huggingface.co/Qwen', tags: ['ai', 'chat'], opens: ['ollama', 'jan', 'lmstudio'], needs: '16 GB memory' },
+        license: 'Apache 2.0 (see the model card)', home: 'https://huggingface.co/Qwen', tags: ['ai', 'chat'], opens: ['ollama', 'jan', 'lmstudio'], group: 'ai', devices: ['computer', 'drive', 'server'], needs: '16 GB memory' },
 
       /* ---------------- 15 Apps & installers ---------------- */
       { id: 'kiwix-installers', shelf: 'tools', p: 1, kind: 'app', axis: 'os', app: 'kiwix',
