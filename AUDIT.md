@@ -19,7 +19,7 @@ not be checked in the development environment it says so, and says where it is c
 | Area | Result |
 |---|---|
 | Unit tests | 51 pass: catalog integrity, kit packing, exporters and script quoting, share links (including the fallback decoder checked against zlib), live-source parsing, region areas, translations, search hints in every language, page hygiene (strict CSP, no HTML sinks, network only through one module). |
-| Download scripts, end to end | **bash** on Ubuntu and macOS, and **Windows PowerShell 5.1 and PowerShell 7** on Windows, run against a local imitation of the Kiwix catalog, the Kiwix download host and publishers. The run covers:<br>• resuming an interrupted file;<br>• restarting when a server cannot resume;<br>• rejecting a stale partial file on HTTP 416;<br>• choosing the newest Kiwix file (`2026-09b` after `2026-09`) under a locale that ignores punctuation;<br>• finding a renamed book by search;<br>• SHA-256 checks, with a mismatch kept as `.bad`;<br>• keeping a complete older version until `WAITBOOK_UPDATE=1`;<br>• removing superseded partial files;<br>• failure reporting and exit status;<br>• re-runs;<br>• an index that lists only finished files in the script's own folders;<br>• the default destination next to the script. |
+| Download scripts, end to end | The `.sh` script ran under `bash` and `sh` on Ubuntu (`sh` is `dash` there) and macOS, and once more with only the tools that a-Shell on iPad offers. **Windows PowerShell 5.1 and PowerShell 7** ran on Windows. All run against a local imitation of the Kiwix catalog, the Kiwix download host and publishers. The run covers:<br>• resuming an interrupted file;<br>• restarting when a server cannot resume;<br>• rejecting a stale partial file on HTTP 416;<br>• choosing the newest Kiwix file (`2026-09b` after `2026-09`) under a locale that ignores punctuation;<br>• finding a renamed book by search;<br>• SHA-256 checks, with a mismatch kept as `.bad`;<br>• keeping a complete older version until `WAITBOOK_UPDATE=1`;<br>• removing superseded partial files;<br>• failure reporting and exit status;<br>• re-runs;<br>• an index that lists only finished files in the script's own folders;<br>• the default destination next to the script. |
 | Screens | 25 routes with no console errors, no untranslated keys and no horizontal scrolling:<br>• in CI, Chromium, WebKit and Firefox × desktop, iPhone 15, iPad (gen 7) and Arabic;<br>• locally, all ten interface languages at 320 px (iPhone SE). |
 | Accessibility | axe-core, WCAG 2.0/2.1/2.2 A and AA: **0 violations** on 17 screens × paper, dark and night themes (English) and paper (Arabic, right-to-left). |
 | Offline | After one online visit, every screen works with the network off:<br>• the map viewer works without having been opened online (fetched in the background);<br>• the language can be switched offline;<br>• a 404 page never replaces the stored app;<br>• an app update keeps what was stored;<br>• `index.html` opened from disk works;<br>• strict offline makes no request outside the app. |
@@ -45,6 +45,7 @@ Severity: **H** high, **M** medium, **L** low. Every fix has a test unless the r
 | T9 | Kiwix Hotspot's page moved (404). | L | Link updated. |
 | T10 | The library search only matched the English catalog, so the translated example searches found nothing (noticed by the translators). | M | Search also matches shelf names, shelf descriptions and type labels in the reader's language. The examples were changed to words that do match, and a test checks every example in every language. |
 | T11 | macOS: bash bracket ranges follow the locale's collation, so the index's folder filter let `99-Notes` through (found by the end-to-end test on the macOS runner). | L | The bash script runs with `LC_ALL=C`. |
+| T12 | There was no way to download a whole kit at once on iPad or iPhone (no terminal for the script). | M | The download script is plain POSIX `sh` now, needing only `sh`, `curl`, `grep`, `sed`, `awk` and basic file commands. It runs in the free a-Shell app, and the *Download script* tab explains how. It is tested end to end under `dash`, `bash`, and `sh` with a minimal toolset like a-Shell's (no `sort`, `tail`, `cut`, `tr`, `sha256sum` or `df`; checksums through Python). |
 
 ### Found by the independent review
 
@@ -83,6 +84,8 @@ pattern and quoted, and comments cannot be broken out of. The reviewer also foun
 - **Full-size downloads.** The scripts were tested against local imitations of the real servers, not by downloading
   real multi-gigabyte archives. The real endpoints were checked for reachability and CORS in CI.
 - **PowerShell** runs only on the Windows CI runners (none was available in the development environment).
+- **a-Shell on a real iPad** was not available. The script is tested under `dash` and with a minimal toolset like
+  a-Shell's, but not inside a-Shell itself.
 - **The pmtiles tool** was verified by checksum against its official release but not executed in the development
   environment.
 - **Translations** are complete and machine-checked: every key, placeholder and plural category, and every search

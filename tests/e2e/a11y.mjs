@@ -14,7 +14,7 @@ let axePath = args.includes('--axe') ? args[args.indexOf('--axe') + 1] : process
 if (!axePath) { try { axePath = require.resolve('axe-core/axe.min.js'); } catch { /* not installed */ } }
 if (!axePath || !existsSync(axePath)) { console.error('axe-core not found: npm install axe-core, or pass --axe'); process.exit(2); }
 
-const ROUTES = ['#/', '#/library', '#/item/wikipedia', '#/item/kiwix-maps', '#/pack', '#/pack?step=2', '#/pack?step=3', '#/pack?step=4', '#/kit', '#/kit?tab=checklist', '#/kit?tab=share', '#/cards', '#/cards/burns', '#/map', '#/apps', '#/settings', '#/kiwix'];
+const ROUTES = ['#/', '#/library', '#/item/wikipedia', '#/item/kiwix-maps', '#/pack', '#/pack?step=2', '#/pack?step=3', '#/pack?step=4', '#/kit', '#/kit?tab=checklist', '#/kit?tab=script', '#/kit?tab=share', '#/cards', '#/cards/burns', '#/map', '#/apps', '#/settings', '#/kiwix'];
 const RUNS = (process.env.A11Y_RUNS || 'paper:en,dark:en,night:en,paper:ar').split(',').map((s) => ({ theme: s.split(':')[0], lang: s.split(':')[1] }));
 
 const browser = await chromium.launch();

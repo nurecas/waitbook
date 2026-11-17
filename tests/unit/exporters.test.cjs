@@ -11,11 +11,20 @@ function sampleKit() {
   return K.autofill({ langs: ['sw', 'en'], region: 'KE', device: 'drive', os: 'linux', budget: 64e9, depth: 3 });
 }
 
-test('generated bash parses (bash -n)', () => {
+test('the download script parses in a strict POSIX shell and in bash', (t) => {
   const file = path.join(os.tmpdir(), 'wb-test-' + process.pid + '.sh');
-  fs.writeFileSync(file, X.bash(X.plan(sampleKit())));
-  execFileSync('bash', ['-n', file]);
-  fs.unlinkSync(file);
+  const script = X.bash(X.plan(sampleKit()));
+  assert.ok(script.startsWith('#!/bin/sh\n'));
+  fs.writeFileSync(file, script);
+  try {
+    // dash is what /bin/sh is on Debian and Ubuntu, and is strict about POSIX; bash --posix catches bash-only habits too.
+    for (const [exe, args] of [['dash', ['-n']], ['sh', ['-n']], ['bash', ['--posix', '-n']], ['bash', ['-n']]]) {
+      try { execFileSync('sh', ['-c', 'command -v ' + exe], { stdio: 'ignore' }); } catch { t.diagnostic(exe + ' not installed'); continue; }
+      execFileSync(exe, args.concat(file));
+    }
+  } finally {
+    fs.unlinkSync(file);
+  }
 });
 
 test('every command line in the scripts uses only quoted, validated arguments', () => {

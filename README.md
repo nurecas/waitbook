@@ -80,8 +80,9 @@ Books are found by the name the catalog lists them under, with a text search as 
 
 ### The download scripts
 
-`waitbook-download.sh` (macOS, Linux, Android/Termux) and `waitbook-download.ps1` (Windows PowerShell 5.1 or 7) can be
-run again at any time:
+`waitbook-download.sh` is plain POSIX `sh` (macOS, Linux, Android with Termux, and **iPad or iPhone with the free
+[a-Shell](https://apps.apple.com/app/a-shell/id1473805438) app**); `waitbook-download.ps1` is for Windows PowerShell
+5.1 or 7. Both can be run again at any time:
 
 - finished files are skipped, interrupted ones resume, and a server that cannot resume starts the file again;
 - checksums are verified where publishers provide them (Kiwix `.sha256` files; Hugging Face, pinned to the revision
@@ -90,6 +91,14 @@ run again at any time:
   the new one (the old one is removed once the new one is complete);
 - map cuts use the newest Protomaps build and cover every part of a country (Alaska and Hawaii, the Canaries…);
 - without a destination they make a `Waitbook` folder next to the script; `WAITBOOK_VERIFY=0` skips checksums.
+
+**Bulk downloads on iPad or iPhone.** iPadOS has no terminal of its own, so the app's *Download script* tab shows how
+to use a-Shell: put the script in a-Shell's folder in the Files app (or in any folder or USB drive, opened with
+`pickFolder`), run `sh waitbook-download.sh`, and keep a-Shell open while it works (iPadOS pauses apps in the
+background; if it stops, running it again carries on). The script needs only `sh`, `curl`, `grep`, `sed`, `awk` and
+basic file commands, and checks downloads with whatever hashing tool exists (including Python). Map cuts need a
+computer. Without a-Shell, the *Phone checklist* downloads files one by one through Safari, and the Kiwix app can
+download Kiwix books from its own library.
 
 Catalog patterns such as `wikipedia_{lang}_medicine_{flavour}` are expanded against the live catalog using its own
 language metadata, so new languages appear automatically.

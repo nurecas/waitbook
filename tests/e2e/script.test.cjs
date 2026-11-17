@@ -93,24 +93,41 @@ function findPowerShells() {
 // and, when installed, PowerShell 7. CI starts node from PowerShell 7, so the 5.1 run also covers "5.1 started from 7"
 // (an inherited module path that hides Get-FileHash and Expand-Archive).
 const PS = process.platform === 'win32' ? findPowerShells() : [];
-const HAS_BASH = spawnSync('bash', ['-c', 'exit 0']).status === 0 && process.platform !== 'win32';
-const RUNS = [['bash', 'bash']].concat(PS.length ? PS.map((exe) => [exe, 'ps']) : [['powershell', 'ps']]);
+// The .sh script is plain POSIX sh (it also has to run in a-Shell on iPad), so it runs under bash and under sh,
+// which is dash on Debian and Ubuntu and bash's POSIX mode on macOS.
+const has = (exe) => process.platform !== 'win32' && spawnSync(exe, ['-c', 'exit 0']).status === 0;
+// "minimal" runs sh with only the tools a small environment such as a-Shell on iPad offers: no sort, tail, cut, tr,
+// sha256sum, shasum or df (checksums then come from python3).
+const MINIMAL = ['sh', 'curl', 'grep', 'sed', 'awk', 'ls', 'mkdir', 'mv', 'rm', 'wc', 'python3'];
+function minimalBin() {
+  if (process.platform === 'win32') return null;
+  const bin = fs.mkdtempSync(path.join(os.tmpdir(), 'wb-bin-'));
+  for (const tool of MINIMAL) {
+    const r = spawnSync('sh', ['-c', 'command -v ' + tool], { encoding: 'utf8' });
+    if (r.status !== 0) return null;
+    fs.symlinkSync(r.stdout.trim(), path.join(bin, tool));
+  }
+  return bin;
+}
+const MIN_BIN = minimalBin();
+test.after(() => { if (MIN_BIN) fs.rmSync(MIN_BIN, { recursive: true, force: true }); });
+const RUNS = [['bash', 'sh'], ['sh', 'sh'], ['sh', 'minimal']].concat(PS.length ? PS.map((exe) => [exe, 'ps']) : [['powershell', 'ps']]);
 
-for (const [exe, kind] of RUNS) test(`the ${exe} download script works end to end`, { skip: kind === 'bash' ? (!HAS_BASH && 'no bash') : (!PS.includes(exe) && 'Windows only (runs in CI)') }, async () => {
-  const shell = kind === 'bash' ? 'bash' : 'powershell';
+for (const [exe, kind] of RUNS) test(`the download script works end to end (${kind === 'minimal' ? 'sh with a minimal toolset' : exe})`, { skip: kind === 'sh' ? (!has(exe) && 'no ' + exe) : kind === 'minimal' ? (!MIN_BIN && 'tools missing') : (!PS.includes(exe) && 'Windows only (runs in CI)') }, async () => {
+  const shell = kind === 'ps' ? 'powershell' : 'sh';
   const server = await serve();
   const port = server.address().port;
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'wb-dl-'));
-  const sh = path.join(dir, shell === 'bash' ? 'waitbook-download.sh' : 'waitbook-download.ps1');
-  fs.writeFileSync(sh, shell === 'bash' ? WB.exporters.bash(plan(port)) : WB.exporters.powershell(plan(port)));
+  const sh = path.join(dir, shell === 'sh' ? 'waitbook-download.sh' : 'waitbook-download.ps1');
+  fs.writeFileSync(sh, shell === 'sh' ? WB.exporters.bash(plan(port)) : WB.exporters.powershell(plan(port)));
   const dest = path.join(dir, 'Library');
   // A locale whose collation ignores punctuation: picking the newest file must not depend on it.
-  const env = { ...process.env, LC_ALL: 'en_US.UTF-8', WAITBOOK_OPDS: `http://127.0.0.1:${port}/catalog/v2/entries`, WAITBOOK_DL: `http://127.0.0.1:${port}`, HTTPS_PROXY: '', https_proxy: '', HTTP_PROXY: '', http_proxy: '', NO_PROXY: '*', WAITBOOK_NO_PAUSE: '1' };
+  const env = { ...process.env, ...(kind === 'minimal' ? { PATH: MIN_BIN } : {}), LC_ALL: 'en_US.UTF-8', WAITBOOK_OPDS: `http://127.0.0.1:${port}/catalog/v2/entries`, WAITBOOK_DL: `http://127.0.0.1:${port}`, HTTPS_PROXY: '', https_proxy: '', HTTP_PROXY: '', http_proxy: '', NO_PROXY: '*', WAITBOOK_NO_PAUSE: '1' };
   // Without a destination the library goes next to the script, wherever the shell was started.
   const run = (target = dest, extraEnv = {}) => new Promise((resolve) => {
     const args = target ? [target] : [];
     const opts = { env: { ...env, ...extraEnv }, cwd: os.tmpdir() };
-    const p = shell === 'bash' ? spawn('bash', [sh, ...args], opts) : spawn(exe, ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', sh, ...args], opts);
+    const p = shell === 'sh' ? spawn(exe, [sh, ...args], opts) : spawn(exe, ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', sh, ...args], opts);
     let out = '';
     p.stdout.on('data', (d) => { out += d; });
     p.stderr.on('data', (d) => { out += d; });

@@ -337,6 +337,10 @@ input::placeholder, textarea::placeholder { color: var(--ink-3); opacity: 1; }
 .center { text-align: center; }
 .grid { display: grid; gap: 1rem; }
 .grid > *, .export-card > div, .kit-summary > div, .item-head > div { min-width: 0; }
+.ipad-guide { margin-top: 1rem; }
+.ipad-guide > summary { cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: .45rem; min-height: var(--tap); }
+.ipad-guide > summary svg { width: 1.2rem; height: 1.2rem; color: var(--teal); }
+.ipad-guide ol { margin: .4rem 0 .6rem; }
 .cols-2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); }
 .cols-3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
 .stack > * + * { margin-top: 1rem; }

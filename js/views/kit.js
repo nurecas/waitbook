@@ -114,7 +114,8 @@
           else if (task.kind === 'pmtiles') links.appendChild(h('a', { href: '#/map' }, t('kit.mapNeedsComputer')));
           var size = task.size != null ? ' · ' + (task.kind === 'url' || task.kind === 'pmtiles' ? '≈ ' : '') + U.bytes(task.size, loc) : '';
           li.appendChild(h('label.tick-hit', cb));
-          li.appendChild(h('div', h('div.cl-name', task.kind === 'page' ? task.title : task.name), h('div.small.muted', task.title + size), links));
+          // A page's name is its own label (one item can point to several pages), its title the item it belongs to.
+          li.appendChild(h('div', h('div.cl-name', { dir: 'auto' }, task.name), h('div.small.muted', { dir: 'auto' }, task.title + size), links));
           ul.appendChild(li);
         });
         panel.appendChild(ul);
@@ -139,9 +140,22 @@
             h('div.btn-row', h('button.btn.btn-primary', { type: 'button', on: { click: function () { WB.dom.download(name, isPs ? X.powershell(plan()) : X.bash(plan()), isPs ? 'text/plain' : 'text/x-shellscript'); } } }, icon('download'), t('kit.downloadFile', { name: name }))),
             h('ol.small', { style: { 'margin-top': '1rem' } },
               h('li', t(isPs ? 'kit.ps1Step1' : 'kit.bashStep1')),
-              h('li', t(isPs ? 'kit.ps1Step2' : 'kit.bashStep2'), cmd(isPs ? 'powershell -ExecutionPolicy Bypass -File .\\waitbook-download.ps1' : 'bash waitbook-download.sh')),
+              h('li', t(isPs ? 'kit.ps1Step2' : 'kit.bashStep2'), cmd(isPs ? 'powershell -ExecutionPolicy Bypass -File .\\waitbook-download.ps1' : 'sh waitbook-download.sh')),
               h('li', t('kit.scriptStep3'))),
             h('p.small.muted', t('kit.scriptSafety')))));
+        if (!isPs) panel.appendChild(ipadGuide(plat.os === 'ios'));
+      }
+
+      // iPadOS has no terminal of its own; the free a-Shell app runs the same script (open on iPhone and iPad).
+      function ipadGuide(open) {
+        return h('details.box-quiet.ipad-guide', { open: open },
+          h('summary', icon('phone'), t('kit.ipadTitle')),
+          h('ol.small',
+            h('li', t('kit.ipadStep1'), ' ', P.extLink('https://apps.apple.com/app/a-shell/id1473805438', t('kit.ipadApp'))),
+            h('li', t('kit.ipadStep2')),
+            h('li', t('kit.ipadStep3'), cmd('sh waitbook-download.sh')),
+            h('li', t('kit.ipadStep4'))),
+          h('p.small.muted', t('kit.ipadNote')));
       }
 
       function drawManager() {
