@@ -171,6 +171,7 @@
     L.push('# book you already have, the one you have is kept; WAITBOOK_UPDATE=1 downloads the new one and then removes it.');
     L.push('');
     L.push('set -u');
+    L.push('export LC_ALL=C  # byte order and plain ASCII ranges in sort, grep and patterns, whatever the locale');
     L.push('DEST="${1:-$(dirname -- "$0")/Waitbook}"');
     L.push('OPDS="${WAITBOOK_OPDS:-https://opds.library.kiwix.org/catalog/v2/entries}"');
     L.push('DL="${WAITBOOK_DL:-https://download.kiwix.org}"');
