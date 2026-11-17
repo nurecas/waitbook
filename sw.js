@@ -8,7 +8,7 @@
    - Requests to other sites (Kiwix catalog, Hugging Face, Protomaps) are never cached here. Large downloads never
      pass through the app. */
 'use strict';
-var VERSION = 'waitbook-2026-11-17-2';
+var VERSION = 'waitbook-2026-11-17-3';
 var SHELL_CACHE = 'waitbook-shell-' + VERSION.replace(/^waitbook-/, '');
 var RUNTIME_CACHE = 'waitbook-runtime';
 var SHELL = [
@@ -50,9 +50,10 @@ function keep(cacheName, req, res) {
 }
 
 self.addEventListener('install', function (event) {
-  // cache: 'reload' skips the browser's HTTP cache so a new version never precaches old files.
+  // cache: 'no-cache' revalidates every file with the server, so a new version never precaches stale copies, while
+  // files the page has just downloaded come back as a cheap "not modified".
   event.waitUntil(caches.open(SHELL_CACHE).then(function (cache) {
-    return cache.addAll(SHELL.map(function (u) { return new Request(u, { cache: 'reload' }); }));
+    return cache.addAll(SHELL.map(function (u) { return new Request(u, { cache: 'no-cache' }); }));
   }).then(function () { return self.skipWaiting(); }));
 });
 

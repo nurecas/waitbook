@@ -75,12 +75,12 @@ async function main() {
   const patterns = {};
   const missing = [];
   const dirs = [];
-  const names = {}; // stem -> catalog <name>, only where it is not simply the stem without its flavour
+  const opdsNames = {}; // stem -> catalog <name>, only where it is not simply the stem without its flavour
   const keep = (e) => {
     let di = dirs.indexOf(e.dir);
     if (di === -1) { dirs.push(e.dir); di = dirs.length - 1; }
     files[e.stem] = [e.date, e.size, e.lang.join(','), di];
-    if (e.name && e.name !== opds.splitStem(e.stem).name) names[e.stem] = e.name;
+    if (e.name && e.name !== opds.splitStem(e.stem).name) opdsNames[e.stem] = e.name;
   };
 
   for (const ref of refs) {
@@ -135,7 +135,7 @@ async function main() {
     `// files: stem -> [date, bytes, languages (ISO 639-3), index into dirs]; patterns: catalog pattern -> name code -> {l, f: flavours};\n` +
     `// regions: ISO country (or @group) -> map archive stem.\n` +
     `// names: stem -> catalog <name> where it differs from the stem; missing: curated names the catalog no longer has.\n` +
-    `self.WB_KIWIX_KNOWN = ${JSON.stringify({ updated, source, dirs, files, patterns, regions, names, missing })};\n`);
+    `self.WB_KIWIX_KNOWN = ${JSON.stringify({ updated, source, dirs, files, patterns, regions, names: opdsNames, missing })};\n`);
 
   const rows = feed.entries.map((e) => [e.stem, e.date, e.dir, e.lang.join(','), e.size, e.title, e.category, e.articles, e.summary.slice(0, 160)]);
   await writeFile(join(ROOT, 'data/kiwix-snapshot.js'),
