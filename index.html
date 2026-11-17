@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Waitbook — a library that waits for you</title>
+<meta name="description" content="Pick the world's best free offline knowledge — encyclopedias, medical guides, manuals, maps, schoolbooks and local AI — in your languages, sized to your device, and get a download plan that works on any phone or computer.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self';img-src 'self' data: blob: https://opds.library.kiwix.org https://library.kiwix.org; font-src 'self'; connect-src 'self' data: blob: https://opds.library.kiwix.org https://huggingface.co https://build-metadata.protomaps.dev; worker-src 'self' blob:; child-src blob:; object-src 'none'; base-uri 'none'; form-action 'none'; manifest-src 'self'">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f1ead8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16130f" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Waitbook">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<link rel="icon" href="img/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/print.css" media="print">
+</head>
+<body>
+<a class="skip" href="#main" data-i18n="a11y.skip">Skip to content</a>
+
+<svg xmlns="http://www.w3.org/2000/svg" class="sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3.5 10.5 12 4l8.5 6.5"/><path d="M5.5 9v11h13V9"/><path d="M10 20v-5.5h4V20"/></symbol>
+    <symbol id="i-library" viewBox="0 0 24 24"><path d="M4 4h3.5v16H4zM9.5 4H13v16H9.5z"/><path d="m15 5.2 3.4-.9 3.6 15.2-3.4.9z"/><path d="M3 20.5h18"/></symbol>
+    <symbol id="i-kit" viewBox="0 0 24 24"><path d="M3.5 8h17v12h-17z"/><path d="M6 8 7.5 4h9L18 8"/><path d="M9.5 8v4h5V8"/></symbol>
+    <symbol id="i-cards" viewBox="0 0 24 24"><path d="M7 3.5h12v15H7z"/><path d="M4.5 6.5v14h11"/><path d="M10 8h6M10 11h6M10 14h3.5"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/><path d="M12 3.5c2.6 2.3 3.8 5.2 3.8 8.5s-1.2 6.2-3.8 8.5c-2.6-2.3-3.8-5.2-3.8-8.5S9.4 5.8 12 3.5z"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path d="M3.5 6 9 4l6 2 5.5-2v14L15 20l-6-2-5.5 2z"/><path d="M9 4v14M15 6v14"/></symbol>
+    <symbol id="i-apps" viewBox="0 0 24 24"><path d="M4 4h6.5v6.5H4zM13.5 4H20v6.5h-6.5zM4 13.5h6.5V20H4z"/><path d="M16.75 13.5V20M13.5 16.75H20"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><path d="M13 4.5h4v5h-4zM7 14.5h4v5H7z"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-health" viewBox="0 0 24 24"><path d="M9 3.5h6v5.5h5.5v6H15v5.5H9V15H3.5V9H9z"/></symbol>
+    <symbol id="i-water" viewBox="0 0 24 24"><path d="M12 3.5c3.8 4.6 6 8 6 10.8a6 6 0 0 1-12 0c0-2.8 2.2-6.2 6-10.8z"/><path d="M9 14.5a3 3 0 0 0 3 3"/></symbol>
+    <symbol id="i-food" viewBox="0 0 24 24"><path d="M12 21V9"/><path d="M12 13c-4.5 0-7-2.5-7-7 4.5 0 7 2.5 7 7z"/><path d="M12 10.5c0-4 2.2-6.5 6.5-6.5 0 4-2.5 6.5-6.5 6.5z"/><path d="M7 21h10"/></symbol>
+    <symbol id="i-shelter" viewBox="0 0 24 24"><path d="M2.5 20.5 12 4l9.5 16.5z"/><path d="M12 4v16.5M9 20.5l3-5 3 5"/></symbol>
+    <symbol id="i-energy" viewBox="0 0 24 24"><path d="M13.5 2.5 5 13.5h6l-1.5 8 8.5-11h-6z"/></symbol>
+    <symbol id="i-repair" viewBox="0 0 24 24"><path d="M14.5 4.2a4.5 4.5 0 0 0 5.3 5.3L20.5 9l-2-.3L17 7.2l-.3-2z"/><path d="M15.5 8.5 4.5 19.5"/><path d="M14 3.5a5 5 0 0 1 6.5 6.5 5 5 0 0 1-5.6 1.2L6 20H4v-2l8.8-8.9A5 5 0 0 1 14 3.5z"/></symbol>
+    <symbol id="i-prepare" viewBox="0 0 24 24"><path d="M12 3 21.5 20h-19z"/><path d="M12 9.5v5M12 16.8v.4"/></symbol>
+    <symbol id="i-comms" viewBox="0 0 24 24"><path d="M12 12v9M9 21h6"/><circle cx="12" cy="10" r="1.6"/><path d="M8.5 6.5a5 5 0 0 0 0 7M15.5 6.5a5 5 0 0 1 0 7M5.7 3.7a9 9 0 0 0 0 12.6M18.3 3.7a9 9 0 0 1 0 12.6"/></symbol>
+    <symbol id="i-maps" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></symbol>
+    <symbol id="i-reference" viewBox="0 0 24 24"><path d="M5 4h11.5a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M5 18a2 2 0 0 1 2-2h11.5"/><path d="m9 13 2.2-6h.6L14 13M9.8 11h3.4"/></symbol>
+    <symbol id="i-learn" viewBox="0 0 24 24"><path d="M2.5 9 12 4.5 21.5 9 12 13.5z"/><path d="M6.5 11v5c1.5 1.5 3.4 2.3 5.5 2.3s4-.8 5.5-2.3v-5"/><path d="M21.5 9v6"/></symbol>
+    <symbol id="i-books" viewBox="0 0 24 24"><path d="M12 6.5C10 5 7.5 4.5 3.5 4.5v14c4 0 6.5.5 8.5 2 2-1.5 4.5-2 8.5-2v-14c-4 0-6.5.5-8.5 2z"/><path d="M12 6.5v14"/></symbol>
+    <symbol id="i-tech" viewBox="0 0 24 24"><path d="M3.5 5h17v12h-17z"/><path d="m7 9 2.5 2L7 13M11.5 13h4.5M8 20.5h8"/></symbol>
+    <symbol id="i-ai" viewBox="0 0 24 24"><path d="M7 7h10v10H7z"/><path d="M10 3.5V7M14 3.5V7M10 17v3.5M14 17v3.5M3.5 10H7M3.5 14H7M17 10h3.5M17 14h3.5"/><path d="M10 10h4v4h-4z"/></symbol>
+    <symbol id="i-tools" viewBox="0 0 24 24"><path d="M12 3.5v11M7.5 10.5 12 15l4.5-4.5"/><path d="M4 15.5v4.5h16v-4.5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5.5 5.5"/></symbol>
+    <symbol id="i-chev-r" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-chev-l" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+    <symbol id="i-chev-d" viewBox="0 0 24 24"><path d="m5 9 7 7 7-7"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M13.5 4.5h6v6M19.5 4.5 11 13"/><path d="M17 14v5.5H4.5V7H10"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><path d="M8.5 8.5h11v11h-11z"/><path d="M15.5 8.5v-4h-11v11h4"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M4.5 19.5h15"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24"><path d="M7 9V3.5h10V9"/><path d="M7 16.5H4V9h16v7.5h-3"/><path d="M7 13.5h10v7H7z"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><circle cx="6.5" cy="12" r="2.5"/><circle cx="17.5" cy="6" r="2.5"/><circle cx="17.5" cy="18" r="2.5"/><path d="m8.7 10.8 6.6-3.6M8.7 13.2l6.6 3.6"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.6v.4"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.5 21 19.5H3z"/><path d="M12 9.5v4.5M12 16.4v.4"/></symbol>
+    <symbol id="i-locate" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1.5"/><path d="M12 2.5V6M12 18v3.5M2.5 12H6M18 12h3.5"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3.5h8l4 4v13H6z"/><path d="M14 3.5v4h4"/><path d="M12 11v6M9.5 14.5 12 17l2.5-2.5"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4.5 6.5h15M9.5 6.5V4h5v2.5"/><path d="M6.5 6.5 7.5 20h9l1-13.5"/><path d="M10 10v6.5M14 10v6.5"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.5 4.5v4.2h-4.2"/></symbol>
+    <symbol id="i-offline" viewBox="0 0 24 24"><path d="M3.5 9a12.5 12.5 0 0 1 4.3-2.6M11 5.6A12.5 12.5 0 0 1 20.5 9M6.5 12.5a8 8 0 0 1 3-1.8M14.6 11a8 8 0 0 1 2.9 1.5M9.5 16a3.5 3.5 0 0 1 5 0"/><path d="M4 4l16 16"/></symbol>
+    <symbol id="i-online" viewBox="0 0 24 24"><path d="M3.5 9a12.5 12.5 0 0 1 17 0M6.5 12.5a8 8 0 0 1 11 0M9.5 16a3.5 3.5 0 0 1 5 0"/><path d="M12 19.2v.3"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M7 2.5h10v19H7z"/><path d="M11 18.5h2"/></symbol>
+    <symbol id="i-tablet" viewBox="0 0 24 24"><path d="M4.5 3.5h15v17h-15z"/><path d="M11 17.5h2"/></symbol>
+    <symbol id="i-laptop" viewBox="0 0 24 24"><path d="M5 5.5h14v10H5z"/><path d="M2.5 18.5h19l-1.5-3H4z"/></symbol>
+    <symbol id="i-drive" viewBox="0 0 24 24"><path d="M8 2.5h8v6H8z"/><path d="M6 8.5h12v13H6z"/><path d="M10 5h1M13 5h1"/></symbol>
+    <symbol id="i-server" viewBox="0 0 24 24"><path d="M4 4h16v6H4zM4 14h16v6H4z"/><path d="M7.5 7h1M7.5 17h1M12 10v4"/></symbol>
+    <symbol id="i-torrent" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M8.5 8.5v4a3.5 3.5 0 0 0 7 0v-4M8.5 8.5h2M13.5 8.5h2"/></symbol>
+    <symbol id="i-bolt-sm" viewBox="0 0 24 24"><path d="M12 4v8l4 2"/><circle cx="12" cy="12" r="8.5"/></symbol>
+    <symbol id="i-text" viewBox="0 0 24 24"><path d="M4 19 9 5h1l5 14M5.8 14h7.4"/><path d="M15.5 19l2.8-8h.4l2.8 8M16.5 16.5h4"/></symbol>
+  </defs>
+</svg>
+
+<div class="shell" id="shell">
+  <header class="masthead" id="masthead">
+    <a class="brand" href="#/" aria-label="Waitbook home">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40"><rect x="3" y="7" width="34" height="27" rx="1.5" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M3 15h34" stroke="currentColor" stroke-width="2.5"/><path d="M15 7v8M25 7v8" stroke="currentColor" stroke-width="2.5"/><path d="M11 22h18M11 27h11" stroke="var(--signal)" stroke-width="3"/></svg></span>
+      <span class="brand-word">Waitbook</span>
+    </a>
+    <div class="net-status" id="netStatus" role="status" aria-live="polite"></div>
+    <button class="icon-btn" id="quickLang" type="button" aria-haspopup="dialog"><svg aria-hidden="true"><use href="#i-globe"/></svg><span class="quick-lang-code" id="quickLangCode">EN</span></button>
+  </header>
+
+  <nav class="spine" id="spine" aria-label="Main">
+    <ul class="spine-list" id="spineList"></ul>
+  </nav>
+
+  <main class="page" id="main" tabindex="-1"></main>
+
+  <aside class="ledger-foot" id="ledgerFoot" aria-label="Kit total"></aside>
+
+  <nav class="tabbar" id="tabbar" aria-label="Main"></nav>
+</div>
+
+<div class="sheet-host" id="sheetHost"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="sr-only" id="announcer" aria-live="polite"></div>
+
+<noscript><div class="noscript">Waitbook needs JavaScript turned on. The catalog itself is plain data in <code>data/catalog.js</code>.</div></noscript>
+
+<script src="js/core/util.js"></script>
+<script src="js/core/i18n.js"></script>
+<script src="i18n/en.js"></script>
+<script src="data/countries.js"></script>
+<script src="data/catalog.js"></script>
+<script src="data/kiwix-snapshot.js"></script>
+<script src="data/apps.js"></script>
+<script src="data/cards.js"></script>
+<script src="js/core/catalog.js"></script>
+<script src="js/core/kit.js"></script>
+<script src="js/core/opds.js"></script>
+<script src="js/core/resolve.js"></script>
+<script src="js/core/exporters.js"></script>
+<script src="js/core/share.js"></script>
+<script src="js/core/platform.js"></script>
+<script src="js/ui/dom.js"></script>
+<script src="js/ui/store.js"></script>
+<script src="js/ui/net.js"></script>
+<script src="js/ui/router.js"></script>
+<script src="js/views/home.js"></script>
+<script src="js/views/pack.js"></script>
+<script src="js/views/library.js"></script>
+<script src="js/views/item.js"></script>
+<script src="js/views/kiwix.js"></script>
+<script src="js/views/kit.js"></script>
+<script src="js/views/cards.js"></script>
+<script src="js/views/map.js"></script>
+<script src="js/views/apps.js"></script>
+<script src="js/views/settings.js"></script>
+<script src="js/ui/app.js"></script>
+</body>
+</html>
