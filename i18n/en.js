@@ -77,7 +77,8 @@ WB.i18n.register('en', {
   'lib.priority': 'Priority', 'lib.anyPrio': 'Any priority', 'lib.type': 'Type', 'lib.anyType': 'Any type',
   'lib.count': { one: '{n} item', other: '{n} items' }, 'lib.empty': 'Nothing here matches.', 'lib.tryKiwix': 'Search the whole Kiwix library',
 
-  'item.missing': 'Not found', 'item.yourChoice': 'Your choice', 'item.add': 'Add to my kit', 'item.remove': 'Remove from my kit', 'item.chooseFirst': 'Choose a language or region first',
+  'item.missing': 'Not found', 'item.gone': 'Kiwix no longer offers this archive. It may come back under another name.', 'item.goneSearch': 'Search the Kiwix library',
+  'item.yourChoice': 'Your choice', 'item.add': 'Add to my kit', 'item.remove': 'Remove from my kit', 'item.chooseFirst': 'Choose a language or region first',
   'item.needs': 'Needs: {needs}.', 'item.aiCaution': 'AI can be confidently wrong. For health and safety, check its answers against the guides in your library.',
   'item.shelf': 'Shelf', 'item.priority': 'Priority', 'item.type': 'Type', 'item.license': 'Licence', 'item.source': 'Publisher',
   'item.choose': 'Choose', 'item.edition': 'Edition', 'item.edFallback': 'not in every language; the nearest edition is used',

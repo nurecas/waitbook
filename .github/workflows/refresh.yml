@@ -1,7 +1,8 @@
 name: Refresh catalog data
 
 # Weekly: fetch the live Kiwix catalog (newest files and sizes) and check every link Waitbook offers.
-# The link report is attached to the run; refreshed Kiwix data is committed when it changed.
+# Refreshed data is committed and published even when a curated book has disappeared: the app marks such books as
+# withdrawn, and the run fails at the end so a maintainer sees it and can update data/catalog.js.
 on:
   schedule:
     - cron: '17 4 * * 1'
@@ -9,6 +10,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   refresh:
@@ -18,10 +20,12 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 22
-      - name: Refresh the Kiwix snapshot (fails if a curated name disappeared)
-        run: node tools/refresh-kiwix.mjs --strict
+      - name: Refresh the Kiwix snapshot
+        run: node tools/refresh-kiwix.mjs --missing missing.txt
       - name: Check links
-        run: node tools/check-links.mjs --out link-report.md
+        run: |
+          node tools/check-links.mjs --out link-report.md || true
+          cat link-report.md >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         with:
           name: link-report
@@ -29,10 +33,25 @@ jobs:
       - name: Unit tests still pass with the new data
         run: node --test tests/unit/*.test.cjs
       - name: Commit refreshed data
+        id: commit
         run: |
-          if git diff --quiet -- data/; then echo "No change"; exit 0; fi
+          if git diff --quiet -- data/; then echo "No change"; echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/kiwix-known.js data/kiwix-snapshot.js
           git commit -m "Refresh Kiwix catalog snapshot"
           git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+      # A push made with GITHUB_TOKEN does not start other workflows; a dispatch does.
+      - name: Publish the refreshed data
+        if: steps.commit.outputs.changed == 'true' && (github.event_name == 'schedule' || github.ref_name == github.event.repository.default_branch)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref "$GITHUB_REF_NAME"
+      - name: Report curated names that disappeared
+        run: |
+          if [ -s missing.txt ]; then
+            echo "These curated Kiwix names are no longer in the catalog (see the link report for similar names):"
+            cat missing.txt
+            exit 1
+          fi

@@ -66,18 +66,18 @@ function plan(port) {
   });
 }
 
-function findPowerShell() {
-  for (const exe of process.platform === 'win32' ? ['powershell', 'pwsh'] : ['pwsh', 'powershell']) {
-    const r = spawnSync(exe, ['-NoProfile', '-Command', '$PSVersionTable.PSVersion.Major'], { encoding: 'utf8' });
-    if (r.status === 0) return exe;
-  }
-  return null;
+function findPowerShells() {
+  return ['powershell', 'pwsh'].filter((exe) => spawnSync(exe, ['-NoProfile', '-Command', '$PSVersionTable.PSVersion.Major'], { encoding: 'utf8' }).status === 0);
 }
-// The PowerShell script is for Windows (it uses curl.exe), so it is tested there only.
-const PWSH = process.platform === 'win32' ? findPowerShell() : null;
+// The PowerShell script is for Windows (it uses curl.exe), so it is tested there only: with Windows PowerShell 5.1
+// and, when installed, PowerShell 7. CI starts node from PowerShell 7, so the 5.1 run also covers "5.1 started from 7"
+// (an inherited module path that hides Get-FileHash and Expand-Archive).
+const PS = process.platform === 'win32' ? findPowerShells() : [];
 const HAS_BASH = spawnSync('bash', ['-c', 'exit 0']).status === 0 && process.platform !== 'win32';
+const RUNS = [['bash', 'bash']].concat(PS.length ? PS.map((exe) => [exe, 'ps']) : [['powershell', 'ps']]);
 
-for (const shell of ['bash', 'powershell']) test(`the ${shell} download script works end to end`, { skip: shell === 'bash' ? (!HAS_BASH && 'no bash') : (!PWSH && 'Windows only (runs in CI)') }, async () => {
+for (const [exe, kind] of RUNS) test(`the ${exe} download script works end to end`, { skip: kind === 'bash' ? (!HAS_BASH && 'no bash') : (!PS.includes(exe) && 'Windows only (runs in CI)') }, async () => {
+  const shell = kind === 'bash' ? 'bash' : 'powershell';
   const server = await serve();
   const port = server.address().port;
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'wb-dl-'));
@@ -85,9 +85,12 @@ for (const shell of ['bash', 'powershell']) test(`the ${shell} download script w
   fs.writeFileSync(sh, shell === 'bash' ? WB.exporters.bash(plan(port)) : WB.exporters.powershell(plan(port)));
   const dest = path.join(dir, 'Library');
   const env = { ...process.env, WAITBOOK_OPDS: `http://127.0.0.1:${port}/catalog/v2/entries`, WAITBOOK_DL: `http://127.0.0.1:${port}`, HTTPS_PROXY: '', https_proxy: '', HTTP_PROXY: '', http_proxy: '', NO_PROXY: '*', WAITBOOK_NO_PAUSE: '1' };
-  const run = () => new Promise((resolve) => {
+  // Without a destination the library goes next to the script, wherever the shell was started.
+  const run = (target = dest) => new Promise((resolve) => {
     const { spawn } = require('node:child_process');
-    const p = shell === 'bash' ? spawn('bash', [sh, dest], { env }) : spawn(PWSH, ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', sh, dest], { env });
+    const extra = target ? [target] : [];
+    const opts = { env, cwd: os.tmpdir() };
+    const p = shell === 'bash' ? spawn('bash', [sh, ...extra], opts) : spawn(exe, ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', sh, ...extra], opts);
     let out = '';
     p.stdout.on('data', (d) => { out += d; });
     p.stderr.on('data', (d) => { out += d; });
@@ -116,6 +119,10 @@ for (const shell of ['bash', 'powershell']) test(`the ${shell} download script w
     assert.match(second.out, /= 01-health\/testbook_en_all_maxi_2026-10\.zim \(already here\)/);
     assert.match(second.out, /= 02-water\/doc\.pdf \(already here\)/);
     assert.notEqual(second.code, 0, 'the missing file still counts as a failure');
+
+    const third = await run(null);
+    assert.ok(fs.existsSync(path.join(dir, 'Waitbook', '02-water', 'doc.pdf')), 'default destination is next to the script\n' + third.out);
+    assert.ok(fs.existsSync(path.join(dir, 'Waitbook', 'index.html')));
   } finally {
     server.close();
     fs.rmSync(dir, { recursive: true, force: true });

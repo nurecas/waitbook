@@ -12,6 +12,7 @@
   var dirs = [];
   var patterns = {};   // pattern -> { code: { l: 'fr', f: ['maxi', 'nopic'] } }
   var regions = {};    // ISO2 or group id -> stem (maps)
+  var missing = Object.create(null); // names the last refresh did not find
   var live = {};       // stem -> { date, size, url, dir, at }
   var apps = {};
 
@@ -23,6 +24,8 @@
     dirs = k.dirs || [];
     patterns = k.patterns || {};
     regions = k.regions || {};
+    missing = Object.create(null);
+    (k.missing || []).forEach(function (r) { missing[r] = true; });
     apps = opts.apps || (root.WB_APPS && root.WB_APPS.apps) || {};
     byId = Object.create(null);
     data.items.forEach(function (it, i) {
@@ -41,6 +44,20 @@
   function app(id) { return apps[id] || null; }
 
   function isPattern(k) { return typeof k === 'string' && k.indexOf('{') !== -1; }
+
+  /** The last catalog refresh looked for this Kiwix name (or pattern) and did not find it, and no live answer since. */
+  function isMissing(ref) { return !!missing[ref] && !live[ref]; }
+
+  /** Subjects an item lets you pick from, without those Kiwix no longer offers. */
+  function options(it) { return (it.options || []).filter(function (o) { return !o.kiwix || !isMissing(o.kiwix); }); }
+
+  /** Kiwix has withdrawn everything this item points to. It stays reachable by link (with a note) but is left out of
+      lists, quick kits and field cards until the catalog is updated. */
+  function gone(it) {
+    if (it.options) return !options(it).length;
+    if (!it.kiwix || it.variants || it.axis === 'region') return false;
+    return isMissing(it.kiwix);
+  }
 
   /** The axis an item varies along: 'lang' (default), 'region', 'os' or 'none'. */
   function axis(it) {
@@ -112,8 +129,8 @@
       it.files.forEach(function (f) { if (f.lang) out.push(f.lang); });
     } else if (it.langs) {
       out = it.langs.slice();
-    } else if (it.options && it.options[0] && known[it.options[0].kiwix]) {
-      out = known[it.options[0].kiwix][2].split(',').map(U.lang1);
+    } else if (options(it)[0] && known[options(it)[0].kiwix]) {
+      out = known[options(it)[0].kiwix][2].split(',').map(U.lang1);
     } else if (p && known[p]) {
       out = known[p][2].split(',').map(U.lang1);
     } else {
@@ -218,7 +235,11 @@
       if (it.pmtiles) return ctx.region ? [ctx.region] : [];
       return ctx.region && regions[ctx.region] ? [ctx.region] : [];
     }
-    if (a === 'pick') return (it.defaultPick || (it.options || []).slice(0, 1).map(function (o) { return o.id; })).slice();
+    if (a === 'pick') {
+      var avail = options(it).map(function (o) { return o.id; });
+      var dp = (it.defaultPick || []).filter(function (id) { return avail.indexOf(id) !== -1; });
+      return dp.length ? dp : avail.slice(0, 1);
+    }
     if (a === 'os') {
       var oss = (it.files || []).map(function (f) { return f.os; });
       var pick = ctx.os && oss.indexOf(ctx.os) !== -1 ? [ctx.os] : [];
@@ -265,19 +286,32 @@
     return ls.some(function (l) { return have.indexOf(U.lang1(l)) !== -1; });
   }
 
+  /** Words in the reader's language that describe an item: its shelf's name and description and its type. Titles and
+      descriptions come from publishers (mostly in English), so this is what lets people search in their own language. */
+  function localText(it) {
+    var I = WB.i18n;
+    if (!I) return '';
+    if (it._loc && it._loc.k === I.lang) return it._loc.v;
+    var v = U.fold([I.t('shelf.' + it.shelf), I.t('shelf.' + it.shelf + '.d'), I.t('kind.' + it.kind)].join(' '));
+    it._loc = { k: I.lang, v: v };
+    return v;
+  }
+
   function search(list, q) {
     var f = U.fold(q);
     if (!f) return list;
     var words = f.split(' ');
     return list.filter(function (it) {
       var hay = it._hay || (it._hay = U.fold([it.title, it.by, it.desc, (it.tags || []).join(' '), it.id, typeof it.kiwix === 'string' ? it.kiwix : ''].join(' ')));
-      return words.every(function (w) { return hay.indexOf(w) !== -1; });
+      var loc = localText(it);
+      return words.every(function (w) { return hay.indexOf(w) !== -1 || loc.indexOf(w) !== -1; });
     });
   }
 
   function filter(opts) {
     opts = opts || {};
     var list = data.items.filter(function (it) {
+      if (!opts.all && gone(it)) return false;
       if (opts.shelf && it.shelf !== opts.shelf) return false;
       if (opts.p && it.p > opts.p) return false;
       if (opts.kind && it.kind !== opts.kind) return false;
@@ -307,7 +341,7 @@
     axis: axis, editions: editions, editionsFor: editionsFor, defaultEdition: defaultEdition, editionObj: editionObj,
     stemFor: stemFor, langs: langs, kiwixFacts: kiwixFacts, filesFor: filesFor, defaultValues: defaultValues,
     sizeOf: sizeOf, matchesLangs: matchesLangs, search: search, filter: filter, allKiwixRefs: allKiwixRefs,
-    isPattern: isPattern, regionList: regionList, codeForLang: codeForLang, estimateMap: estimateMap, regionBox: regionBox,
+    isPattern: isPattern, isMissing: isMissing, options: options, gone: gone, regionList: regionList, codeForLang: codeForLang, estimateMap: estimateMap, regionBox: regionBox,
   };
   WB.catalog = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

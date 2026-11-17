@@ -409,9 +409,11 @@ input::placeholder, textarea::placeholder { color: var(--ink-3); opacity: 1; }
 .row.is-on .row-title .hl-text { background-size: 100% 100%; color: var(--marker-ink); }
 .row-title:hover { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: .18em; }
 .row-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .6rem; margin-top: .3rem; font-size: .86rem; color: var(--ink-2); }
+.row > *, .row-meta > * { min-width: 0; }
+.row-meta > *, .row-title { overflow-wrap: anywhere; }
 .row-desc { margin: .35rem 0 0; font-size: .93rem; color: var(--ink-2); max-width: 44rem; }
-.row-size { font-family: var(--font-mono); font-stretch: 85%; font-size: .92rem; text-align: end; white-space: nowrap; padding-top: .1rem; }
-.row-size small { display: block; color: var(--ink-3); font-size: .72rem; }
+.row-size { font-family: var(--font-mono); font-stretch: 85%; font-size: .92rem; text-align: end; padding-top: .1rem; min-width: 0; overflow-wrap: anywhere; }
+.row-size small { display: block; color: var(--ink-3); font-size: .72rem; line-height: 1.25; margin-top: .1rem; }
 .row-variant { font-size: .82rem; color: var(--teal); font-weight: 650; }
 .shelf-group { margin-top: 1.75rem; }
 .shelf-group h3 { display: flex; align-items: center; gap: .6rem; font-size: 1.25rem; margin-bottom: .6rem; }

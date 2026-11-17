@@ -24,7 +24,9 @@ const browser = await playwright[browserName].launch();
 const dev = deviceName ? { ...devices[deviceName] } : { viewport: { width: 1280, height: 900 } };
 if (browserName === 'firefox') delete dev.isMobile; // Firefox has no mobile emulation
 delete dev.defaultBrowserType;
-const ctx = await browser.newContext({ ...dev, locale: lang });
+// Service workers are blocked here: Playwright cannot route requests that pass through one in every browser, and
+// the live APIs must come from fixtures. tests/e2e/offline.mjs covers the service worker.
+const ctx = await browser.newContext({ ...dev, locale: lang, serviceWorkers: 'block' });
 await mockLiveApis(ctx);
 const page = await ctx.newPage();
 const problems = [];

@@ -21,6 +21,7 @@ const args = process.argv.slice(2);
 const out = args.includes('--out') ? args[args.indexOf('--out') + 1] : null;
 const strict = args.includes('--strict');
 const UA = 'waitbook-link-check (+https://github.com/)';
+const U_uniq = (a) => [...new Set(a)];
 
 function collect() {
   const urls = new Map(); // url -> where it is used
@@ -76,16 +77,51 @@ async function main() {
   const fetcher = { text: async (u) => { const r = await fetch(u, { headers: { 'user-agent': UA } }); if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); }, json: async (u) => (await fetch(u)).json() };
   const live = await WB.resolve.kiwix([...stems], fetcher);
   const missing = [...stems].filter((s) => !live[s]);
+  // For each missing name, list books whose name shares its first part: often the same book under a new name.
+  const suggest = {};
+  for (const s of missing) {
+    const first = s.split('_')[0];
+    const core = first.split('.').sort((a, b) => b.length - a.length)[0];
+    const found = new Set();
+    for (const q of U_uniq([first, core])) {
+      try {
+        const feed = WB.opds.parseFeed(await fetcher.text('https://opds.library.kiwix.org/catalog/v2/entries?count=40&q=' + encodeURIComponent(q)));
+        feed.entries.forEach((e) => { if (e.stem && e.stem.toLowerCase().includes(core.toLowerCase())) found.add(e.stem + ' (' + e.date + ')'); });
+      } catch { /* report without suggestions */ }
+    }
+    suggest[s] = [...found].slice(0, 8);
+  }
   const moved = [...stems].filter((s) => live[s] && live[s].date !== known.files[s][0]);
+
+  // The app reads three APIs straight from the browser, which only works if they allow other sites (CORS).
+  const hfItem = WB.catalog.items().find((it) => it.hf);
+  const apis = [
+    ['Kiwix catalog', 'https://opds.library.kiwix.org/catalog/v2/entries?count=1'],
+    ['Hugging Face', hfItem ? 'https://huggingface.co/api/models/' + hfItem.hf.repo + '/tree/main' : null],
+    ['Protomaps build list', 'https://build-metadata.protomaps.dev/builds.json'],
+  ].filter((a) => a[1]);
+  const cors = await Promise.all(apis.map(async ([name, u]) => {
+    try {
+      const r = await fetch(u, { headers: { 'user-agent': UA, origin: 'https://example.github.io' } });
+      try { await r.body?.cancel(); } catch { /* ignore */ }
+      const allow = r.headers.get('access-control-allow-origin');
+      return { name, u, ok: r.ok && (allow === '*' || allow === 'https://example.github.io'), note: `HTTP ${r.status}, access-control-allow-origin: ${allow || '(none)'}` };
+    } catch (e) { return { name, u, ok: false, note: 'error: ' + e.message }; }
+  }));
 
   const lines = [
     `# Waitbook link check — ${new Date().toISOString().slice(0, 10)}`, '',
+    ...cors.map((c) => `- Browser access to ${c.name}: ${c.ok ? 'allowed' : 'NOT allowed'} (${c.note})`),
     `- ${ok.length} links OK, ${broken.length} broken, ${blocked.length} refused automated checks`,
     `- Kiwix: ${stems.size - missing.length} of ${stems.size} curated files resolve; ${moved.length} have a newer version than the snapshot (run tools/refresh-kiwix.mjs)`, '',
   ];
   if (broken.length) { lines.push('## Broken', ''); broken.forEach((r) => lines.push(`- ${r.status} ${r.url} — ${urls.get(r.url).join(', ')}`)); lines.push(''); }
   if (blocked.length) { lines.push('## Check by hand (the site refused an automated request)', ''); blocked.forEach((r) => lines.push(`- ${r.status} ${r.url} — ${urls.get(r.url).join(', ')}`)); lines.push(''); }
-  if (missing.length) { lines.push('## Kiwix names no longer in the catalog', ''); missing.forEach((s) => lines.push('- ' + s)); lines.push(''); }
+  if (missing.length) {
+    lines.push('## Kiwix names no longer in the catalog', '');
+    missing.forEach((s) => lines.push('- ' + s + (suggest[s] && suggest[s].length ? ' — similar now: ' + suggest[s].join(', ') : ' — nothing similar found')));
+    lines.push('');
+  }
   const report = lines.join('\n');
   console.log(report);
   if (out) await writeFile(out, report + '\n');

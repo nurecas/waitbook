@@ -187,6 +187,7 @@
     }
     function eligible(it) {
       if (shelves.indexOf(it.shelf) === -1 || it.p > depth) return false;
+      if (C.gone(it)) return false;
       if (!C.matchesLangs(it, kit.langs)) return false;
       if (it.devices && kit.device && it.devices.indexOf(kit.device) === -1) return false;
       if (C.axis(it) === 'os' && !shared && !(it.files || []).some(function (f) { return f.os === kit.os; })) return false;

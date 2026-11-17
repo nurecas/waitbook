@@ -21,7 +21,7 @@ const browser = await chromium.launch();
 let failures = 0;
 for (const run of RUNS) {
   // bypassCSP only so the test can inject axe; the app itself runs under its normal strict CSP.
-  const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: run.theme === 'dark' ? 'dark' : 'light', bypassCSP: true });
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: run.theme === 'dark' ? 'dark' : 'light', bypassCSP: true, serviceWorkers: 'block' });
   await mockLiveApis(ctx);
   const page = await ctx.newPage();
   await seedKit(page, base, { theme: run.theme, lang: run.lang });

@@ -80,6 +80,7 @@
 
   function apply(code) {
     lang = code;
+    if (typeof document === 'undefined') return; // tests in Node
     var html = document.documentElement;
     html.lang = code;
     html.dir = WB.util.isRtl(code) ? 'rtl' : 'ltr';

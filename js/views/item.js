@@ -29,6 +29,10 @@
         h('div', h('h1', it.title), h('div.row-meta', h('span', it.by), P.stamps(it))),
         h('div.item-side', h('div.small.muted', t('item.yourChoice')), sizeBig, h('div', { style: { 'margin-top': '.75rem' } }, mainBtn)));
       el.appendChild(head);
+      if (C.gone(it)) {
+        el.appendChild(h('div.note.warn', { role: 'note' }, icon('warn'),
+          h('p', t('item.gone'), ' ', h('a', { href: '#/kiwix?q=' + encodeURIComponent(it.title) }, t('item.goneSearch')))));
+      }
 
       var body = h('div.grid.cols-2', { style: { 'align-items': 'start', gap: '2rem' } });
       var left = h('div.stack');
@@ -93,7 +97,7 @@
       }
 
       function multiPicker() {
-        var opts = axis === 'os' ? U.uniq((it.files || []).map(function (f) { return f.os; })) : (it.options || []).map(function (o) { return o.id; });
+        var opts = axis === 'os' ? U.uniq((it.files || []).map(function (f) { return f.os; })) : C.options(it).map(function (o) { return o.id; });
         var fs = h('fieldset.seg', { style: { display: 'block' } }, h('legend', t(axis === 'os' ? 'item.platforms' : 'item.subjects')));
         var wrap = h('div.lang-picks');
         opts.forEach(function (v) {

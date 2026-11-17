@@ -76,7 +76,7 @@
         links: { web: 'https://internet-in-a-box.org/' } },
       'kiwix-hotspot': { name: 'Kiwix Hotspot', license: 'GPL', platforms: ['linux'],
         desc: 'Raspberry Pi images that broadcast your Kiwix library over Wi-Fi.',
-        links: { web: 'https://kiwix.org/en/wifi-hotspot/' } },
+        links: { web: 'https://get.kiwix.org/en/solutions/hotspots/kiwix-hotspot/' } },
     },
     // What people need to do, and which apps do it, in recommended order.
     needs: [

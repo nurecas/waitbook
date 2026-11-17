@@ -52,7 +52,6 @@
         WB.router.setQuery({ q: state.q, lang: state.lang === (S.state.kit.langs.length ? 'mine' : 'all') ? '' : state.lang, p: state.p, kind: state.kind });
         var langsFilter = state.lang === 'mine' ? S.state.kit.langs : state.lang === 'all' ? [] : [state.lang];
         var items = C.filter({ shelf: shelf, q: state.q, langs: langsFilter, p: state.p ? Number(state.p) : 0, kind: state.kind });
-        if (state.kind === 'page') items = items.concat([]);
         count.textContent = t('lib.count', { n: items.length });
         WB.dom.clear(listHost);
         if (!items.length) {

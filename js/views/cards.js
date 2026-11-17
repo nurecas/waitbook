@@ -64,7 +64,7 @@
     var open = h('ul');
     (c.open || []).forEach(function (o) {
       var it = C.item(o.item);
-      if (!it) return;
+      if (!it || C.gone(it)) return;
       var inKit = K.has(S.state.kit, it.id);
       var li = h('li', h('a', { href: '#/item/' + it.id }, it.title), o.note ? ' — ' + o.note : '', ' ',
         inKit ? h('span.stamp.is-match', t('cards.inKit')) : (interactive ? h('button.btn.btn-small.btn-quiet', { type: 'button', on: { click: function (e) { S.updateKit(function (k) { K.add(k, it.id); }); e.currentTarget.replaceWith(h('span.stamp.is-match', t('cards.inKit'))); WB.dom.announce(t('kit.added', { title: it.title })); } } }, icon('plus'), t('cards.addToKit')) : null));
