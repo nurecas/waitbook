@@ -8,6 +8,11 @@ on:
 permissions:
   contents: read
 
+# A newer push to the same branch cancels the run in progress (saves runner minutes).
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   unit:
     name: Unit tests and translations
@@ -65,3 +70,21 @@ jobs:
       - name: Offline and file:// behaviour
         if: matrix.browser == 'chromium'
         run: node tests/e2e/offline.mjs http://127.0.0.1:8765/
+
+  links:
+    name: Links and live Kiwix names (report only)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Check every link and every curated Kiwix name
+        run: |
+          node tools/check-links.mjs --out link-report.md || true
+          cat link-report.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: link-report
+          path: link-report.md

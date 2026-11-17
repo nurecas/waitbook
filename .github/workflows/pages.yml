@@ -29,6 +29,9 @@ jobs:
           mkdir _site
           cp -r index.html manifest.webmanifest sw.js css js data i18n img vendor _site/
           touch _site/.nojekyll
+          # A new service-worker version per deploy, so every visitor moves to the new files together.
+          sed -i "s/^var VERSION = '[^']*';/var VERSION = 'waitbook-${GITHUB_SHA::12}';/" _site/sw.js
+          grep -q "waitbook-${GITHUB_SHA::12}" _site/sw.js
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

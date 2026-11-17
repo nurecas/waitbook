@@ -20,7 +20,10 @@ var SHELL = [
 ];
 
 self.addEventListener('install', function (event) {
-  event.waitUntil(caches.open(VERSION).then(function (cache) { return cache.addAll(SHELL); }).then(function () { return self.skipWaiting(); }));
+  // cache: 'reload' skips the browser's HTTP cache so a new version never precaches old files.
+  event.waitUntil(caches.open(VERSION).then(function (cache) {
+    return cache.addAll(SHELL.map(function (u) { return new Request(u, { cache: 'reload' }); }));
+  }).then(function () { return self.skipWaiting(); }));
 });
 
 self.addEventListener('activate', function (event) {
@@ -42,14 +45,16 @@ self.addEventListener('fetch', function (event) {
     }).catch(function () { return caches.match('index.html'); }));
     return;
   }
-  event.respondWith(caches.match(req, { ignoreSearch: true }).then(function (hit) {
-    if (hit) return hit;
-    return fetch(req).then(function (res) {
-      if (res.ok && res.type === 'basic' && Number(res.headers.get('content-length') || 0) < 25e6) {
-        var copy = res.clone();
-        caches.open(VERSION).then(function (c) { c.put(req, copy); });
-      }
-      return res;
+  // Stale-while-revalidate: answer from the cache at once (works offline), refresh the copy in the background so
+  // a newly deployed file is used on the next visit even if this worker's version string did not change.
+  event.respondWith(caches.open(VERSION).then(function (cache) {
+    return cache.match(req, { ignoreSearch: true }).then(function (hit) {
+      var refresh = fetch(req).then(function (res) {
+        if (res.ok && res.type === 'basic' && Number(res.headers.get('content-length') || 0) < 25e6) cache.put(req, res.clone());
+        return res;
+      });
+      if (hit) { event.waitUntil(refresh.catch(function () {})); return hit; }
+      return refresh;
     });
   }));
 });
