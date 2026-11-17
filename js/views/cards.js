@@ -27,7 +27,7 @@
       cards().forEach(function (c, i) {
         ul.appendChild(h('li', h('a.index-card', { href: '#/cards/' + c.id },
           h('span.num', { 'aria-hidden': 'true' }, P.num2(i + 1)),
-          h('h3', icon(c.icon), c.title), h('p', c.summary))));
+          h('h3', icon(c.icon), h('span', { lang: 'en', dir: 'ltr' }, c.title)), h('p', { lang: 'en', dir: 'ltr' }, c.summary))));
       });
       el.appendChild(ul);
       el.appendChild(h('div.btn-row', { style: { 'margin-top': '1.5rem' } }, h('button.btn', { type: 'button', on: { click: function () { document.documentElement.classList.add('print-cards'); root.print(); setTimeout(function () { document.documentElement.classList.remove('print-cards'); }, 500); } } }, icon('print'), t('cards.printAll'))));
@@ -52,21 +52,24 @@
 
   function sheet(c, i, interactive) {
     var S = WB.store, C = WB.catalog, K = WB.kit;
-    var s = h('article.card-sheet', { lang: 'en' });
+    // Card text is English (reviewed, not machine-translated); it keeps its own language and direction inside a
+    // translated page so it reads correctly in Arabic too.
+    var EN = { lang: 'en', dir: 'ltr' };
+    var s = h('article.card-sheet');
     s.appendChild(h('span.num', { 'aria-hidden': 'true' }, P.num2(i + 1)));
-    s.appendChild(h(interactive ? 'h1' : 'h2', c.title));
-    s.appendChild(h('p.muted', c.summary));
+    s.appendChild(h(interactive ? 'h1' : 'h2', EN, c.title));
+    s.appendChild(h('p.muted', EN, c.summary));
     var numbers = S.state.settings.numbers;
     if (numbers) s.appendChild(h('div.card-block', h('h2', icon('comms'), t('cards.yourNumbers')), h('pre.mono', { style: { 'white-space': 'pre-wrap', margin: 0 } }, numbers)));
-    s.appendChild(h('div.card-block.first', h('h2', icon('chev-r', 'flip-rtl'), t('cards.first')), h('ul', c.first.map(function (x) { return h('li', x); }))));
-    if (c.flags && c.flags.length) s.appendChild(h('div.card-block.flags', h('h2', icon('warn'), t('cards.flags')), h('ul', c.flags.map(function (x) { return h('li', x); }))));
+    s.appendChild(h('div.card-block.first', h('h2', icon('chev-r', 'flip-rtl'), t('cards.first')), h('ul', EN, c.first.map(function (x) { return h('li', x); }))));
+    if (c.flags && c.flags.length) s.appendChild(h('div.card-block.flags', h('h2', icon('warn'), t('cards.flags')), h('ul', EN, c.flags.map(function (x) { return h('li', x); }))));
 
     var open = h('ul');
     (c.open || []).forEach(function (o) {
       var it = C.item(o.item);
       if (!it || C.gone(it)) return;
       var inKit = K.has(S.state.kit, it.id);
-      var li = h('li', h('a', { href: '#/item/' + it.id }, it.title), o.note ? ' — ' + o.note : '', ' ',
+      var li = h('li', h('a', { href: '#/item/' + it.id, lang: 'en', dir: 'auto' }, it.title), o.note ? h('span', EN, ' — ' + o.note) : '', ' ',
         inKit ? h('span.stamp.is-match', t('cards.inKit')) : (interactive ? h('button.btn.btn-small.btn-quiet', { type: 'button', on: { click: function (e) { S.updateKit(function (k) { K.add(k, it.id); }); e.currentTarget.replaceWith(h('span.stamp.is-match', t('cards.inKit'))); WB.dom.announce(t('kit.added', { title: it.title })); } } }, icon('plus'), t('cards.addToKit')) : null));
       if (o.search && o.search.length) {
         var terms = h('div.search-terms', h('span.small.muted', t('cards.searchFor')), o.search.map(function (q) { return h('code', q); }));
@@ -86,8 +89,8 @@
       open.appendChild(li);
     });
     s.appendChild(h('div.card-block', h('h2', icon('library'), t('cards.open')), open));
-    if (c.prepare && c.prepare.length) s.appendChild(h('div.card-block', h('h2', icon('kit'), t('cards.prepare')), h('ul', c.prepare.map(function (x) { return h('li', x); }))));
-    s.appendChild(h('p.small.muted', { style: { 'margin-top': '1.5rem' } }, t('cards.sources'), ' ', c.sources.join('; ') + '.'));
+    if (c.prepare && c.prepare.length) s.appendChild(h('div.card-block', h('h2', icon('kit'), t('cards.prepare')), h('ul', EN, c.prepare.map(function (x) { return h('li', x); }))));
+    s.appendChild(h('p.small.muted', { style: { 'margin-top': '1.5rem' } }, t('cards.sources'), ' ', h('span', EN, c.sources.join('; ') + '.')));
     s.appendChild(h('p.small.muted', t('cards.disclaimerShort')));
     return s;
   }

@@ -95,7 +95,7 @@ file names reduced to `[A-Za-z0-9._-]`, and strict quoting for each shell.
     Kiwix keeps only the two newest dated files per book, so the catalog stores **book names** and resolves the
     current file live, with a last-known snapshot as fallback; scripts resolve again at run time.
   - Hugging Face model API for current GGUF file names and sizes.
-  - Protomaps `https://build-metadata.protomaps.dev/builds.json` for the newest planet build.
+  - Protomaps `https://build-metadata.protomaps.dev/builds.json` for the newest planet build (read by the download scripts only: it does not allow browser access from other sites).
 - **Map viewer**: MapLibre GL JS + PMTiles + Protomaps basemap layers, vendored from npm; glyphs and sprites
   vendored; a custom palette matching the app; a low-resolution world outline is built in so the map is useful
   before any file is loaded.

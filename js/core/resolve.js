@@ -28,21 +28,34 @@
 
   /** Resolve Kiwix stems to their newest files. Returns { stem: {date, size, url, dir, at} } for those found. */
   function kiwix(stems, fetcher, onProgress) {
-    var names = {};
-    stems.forEach(function (s) { if (O.STEM_RE.test(s)) { var n = O.splitStem(s).name; (names[n] = names[n] || []).push(s); } });
+    var C = WB.catalog;
+    var names = Object.create(null);
+    stems.forEach(function (s) { if (O.STEM_RE.test(s)) { var n = C && C.opdsName ? C.opdsName(s) : O.splitStem(s).name; (names[n] = names[n] || []).push(s); } });
     var list = Object.keys(names);
-    var out = {};
+    var out = Object.create(null);
     var done = 0;
+    function take(xml, wanted) {
+      var feed = O.parseFeed(xml);
+      wanted.forEach(function (stem) {
+        var e = O.pickStem(feed.entries, stem);
+        if (e && e.url) out[stem] = { date: e.date, size: e.size, url: e.url, dir: e.dir, at: Date.now() };
+      });
+    }
     return pool(list, 4, function (name) {
-      return fetcher.text(O.entriesUrl({ name: name, count: 50 })).then(function (xml) {
-        var feed = O.parseFeed(xml);
-        names[name].forEach(function (stem) {
-          var e = O.pickStem(feed.entries, stem);
-          if (e && e.url) out[stem] = { date: e.date, size: e.size, url: e.url, dir: e.dir, at: Date.now() };
-        });
-      }).then(function () { done++; if (onProgress) onProgress(done, list.length); });
+      return fetcher.text(O.entriesUrl({ name: name, count: 50 })).then(function (xml) { take(xml, names[name]); })
+        .then(function () { done++; if (onProgress) onProgress(done, list.length); });
+    }).then(function () {
+      // A book listed under another name than expected: search for the first part of its name.
+      var terms = Object.create(null);
+      stems.forEach(function (s) { if (O.STEM_RE.test(s) && !out[s]) { var q = searchTerm(s); (terms[q] = terms[q] || []).push(s); } });
+      return pool(Object.keys(terms), 3, function (q) {
+        return fetcher.text(O.entriesUrl({ q: q, count: 50 })).then(function (xml) { take(xml, terms[q]); }, function () { /* keep what we have */ });
+      });
     }).then(function () { return out; });
   }
+
+  /** The longest part of a stem's first segment, e.g. "gardenology" for "gardenology.org_en_all". */
+  function searchTerm(stem) { return stem.split('_')[0].split('.').sort(function (a, b) { return b.length - a.length; })[0]; }
 
   /** Search the live Kiwix catalog (explorer). */
   function search(params, fetcher) {
@@ -55,34 +68,31 @@
 
   /** Current size (and SHA-256 when published) of Hugging Face files. */
   function hf(refs, fetcher) {
-    var byRepo = {};
+    var byRepo = Object.create(null);
     refs.forEach(function (r) {
       if (!/^[A-Za-z0-9_.-]{1,96}\/[A-Za-z0-9_.-]{1,96}$/.test(r.repo) || !/^[A-Za-z0-9_.-]{1,200}$/.test(r.file)) return;
       (byRepo[r.repo] = byRepo[r.repo] || []).push(r.file);
     });
     var out = {};
     return pool(Object.keys(byRepo), 3, function (repo) {
-      return fetcher.json('https://huggingface.co/api/models/' + repo + '/tree/main').then(function (list) {
-        if (!Array.isArray(list)) return;
-        list.forEach(function (f) {
-          if (!f || typeof f.path !== 'string' || byRepo[repo].indexOf(f.path) === -1) return;
-          var size = f.lfs && typeof f.lfs.size === 'number' ? f.lfs.size : (typeof f.size === 'number' ? f.size : null);
-          var sha = f.lfs && typeof f.lfs.oid === 'string' && /^[0-9a-f]{64}$/.test(f.lfs.oid) ? f.lfs.oid : null;
-          out['hf:' + repo + '/' + f.path] = { size: size, sha256: sha, at: Date.now() };
+      // The current revision first, then the files at exactly that revision: a checksum then always belongs to the
+      // file a link pinned to that revision downloads, even if the publisher uploads a new version later.
+      return fetcher.json('https://huggingface.co/api/models/' + repo + '/revision/main').then(function (info) {
+        return info && typeof info.sha === 'string' && /^[0-9a-f]{40}$/.test(info.sha) ? info.sha : null;
+      }, function () { return null; }).then(function (rev) {
+        return fetcher.json('https://huggingface.co/api/models/' + repo + '/tree/' + (rev || 'main')).then(function (list) {
+          if (!Array.isArray(list)) return;
+          list.forEach(function (f) {
+            if (!f || typeof f.path !== 'string' || byRepo[repo].indexOf(f.path) === -1) return;
+            var size = f.lfs && typeof f.lfs.size === 'number' ? f.lfs.size : (typeof f.size === 'number' ? f.size : null);
+            var sha = f.lfs && typeof f.lfs.oid === 'string' && /^[0-9a-f]{64}$/.test(f.lfs.oid) ? f.lfs.oid : null;
+            out['hf:' + repo + '/' + f.path] = { size: size, sha256: rev ? sha : null, rev: rev, at: Date.now() };
+          });
         });
       });
     }).then(function () { return out; });
   }
 
-  /** Newest Protomaps planet build key, e.g. "20261116.pmtiles". */
-  function protomapsLatest(fetcher) {
-    return fetcher.json('https://build-metadata.protomaps.dev/builds.json').then(function (list) {
-      if (!Array.isArray(list)) return null;
-      var keys = list.map(function (b) { return b && b.key; }).filter(function (k) { return typeof k === 'string' && /^\d{8}\.pmtiles$/.test(k); }).sort();
-      return keys.length ? keys[keys.length - 1] : null;
-    });
-  }
-
-  WB.resolve = { pool: pool, kiwix: kiwix, search: search, hf: hf, protomapsLatest: protomapsLatest };
+  WB.resolve = { pool: pool, kiwix: kiwix, search: search, hf: hf };
   if (typeof module !== 'undefined' && module.exports) module.exports = WB.resolve;
 })(typeof self !== 'undefined' ? self : globalThis);

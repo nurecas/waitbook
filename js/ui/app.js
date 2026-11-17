@@ -154,6 +154,14 @@
           if (nw.state === 'installed' && navigator.serviceWorker.controller) WB.dom.toast(t('app.updated'));
         });
       });
+      return navigator.serviceWorker.ready;
+    }).then(function (reg) {
+      // Ask the worker to store what this page loaded before it took over, and the map viewer, for offline use.
+      setTimeout(function () {
+        var urls = [];
+        try { urls = performance.getEntriesByType('resource').map(function (e) { return e.name; }); } catch (e) { /* ignore */ }
+        if (reg && reg.active) reg.active.postMessage({ type: 'warm', urls: urls });
+      }, 2500);
     }).catch(function () { /* offline install is optional */ });
   }
 

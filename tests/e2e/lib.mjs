@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 const FIX = join(dirname(fileURLToPath(import.meta.url)), '..', 'fixtures');
 
-/** Serve the three live APIs from fixtures, so tests never touch the network. */
+/** Serve the live APIs from fixtures, so tests never touch the network. */
 export async function mockLiveApis(ctx) {
   const feed = await readFile(join(FIX, 'opds-sample.xml'), 'utf8');
   const head = feed.split('<entry>')[0];
@@ -17,7 +17,6 @@ export async function mockLiveApis(ctx) {
     const body = head.replace(/<totalResults>\d+/, '<totalResults>' + hits.length) + hits.join('\n') + '\n</feed>';
     route.fulfill({ status: 200, contentType: 'application/atom+xml', headers: { 'access-control-allow-origin': '*' }, body });
   });
-  await ctx.route('https://build-metadata.protomaps.dev/**', async (route) => route.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: await readFile(join(FIX, 'builds.json'), 'utf8') }));
   await ctx.route('https://huggingface.co/**', async (route) => route.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: await readFile(join(FIX, 'hf-tree.json'), 'utf8') }));
 }
 

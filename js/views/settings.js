@@ -70,6 +70,25 @@
             });
           } } }, icon('trash'), t('settings.reset')))));
 
+      // What is stored for offline use (by the service worker), checked from the page.
+      var ready = h('dl.dl');
+      var readyNote = h('p.small.muted', t('settings.offlineHint'));
+      el.appendChild(h('section.section', { 'aria-labelledby': 'offTitle' }, h('div.section-head', h('h2', { id: 'offTitle' }, t('settings.offline'))), ready, readyNote));
+      if (typeof caches === 'undefined' || !('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) {
+        readyNote.textContent = t('settings.offlineNone');
+      } else {
+        [['settings.offlineApp', 'index.html'], ['settings.offlineLang', 'i18n/' + WB.i18n.lang + '.js'], ['settings.offlineMap', 'vendor/maplibre/maplibre-gl.js'], ['settings.offlineSnapshot', 'data/kiwix-snapshot.js']].forEach(function (r) {
+          var dd = h('dd', '…');
+          ready.appendChild(h('dt', t(r[0])));
+          ready.appendChild(dd);
+          caches.match(new URL(r[1], location.href).href).then(function (hit) {
+            dd.textContent = '';
+            dd.appendChild(icon(hit ? 'check' : 'clock'));
+            dd.appendChild(document.createTextNode(' ' + t(hit ? 'settings.offlineYes' : 'settings.offlineNo')));
+          }, function () { dd.textContent = t('settings.offlineNo'); });
+        });
+      }
+
       var known = root.WB_KIWIX_KNOWN || {};
       el.appendChild(h('section.section', { 'aria-labelledby': 'aboutTitle' }, h('div.section-head', h('h2', { id: 'aboutTitle' }, t('settings.about'))),
         h('p', t('settings.aboutBody')),

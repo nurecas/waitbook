@@ -49,7 +49,7 @@
         k.extra[stem] = {
           stem: stem,
           title: typeof x.title === 'string' ? x.title.replace(/[\u0000-\u001f\u2028\u2029]/g, ' ').slice(0, 200) : stem,
-          size: typeof x.size === 'number' && isFinite(x.size) && x.size > 0 ? x.size : null,
+          size: typeof x.size === 'number' && isFinite(x.size) && x.size > 0 && x.size < 1e15 ? x.size : null,
           date: typeof x.date === 'string' && /^\d{4}-\d{2}[a-z]{0,2}$/.test(x.date) ? x.date : null,
           dir: typeof x.dir === 'string' && /^[A-Za-z0-9_.-]{1,40}$/.test(x.dir) ? x.dir : null,
           lang: typeof x.lang === 'string' && /^[a-z,]{2,40}$/.test(x.lang) ? x.lang : '',

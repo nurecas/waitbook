@@ -1,9 +1,10 @@
 /* The only place the app touches the network. Off by default until a screen needs it; the strict-offline
-   setting blocks everything. Requests go to the three live sources allowed by the page's CSP. */
+   setting blocks everything. Requests go to the two live sources allowed by the page's CSP. (The Protomaps build
+   list does not allow browsers on other sites, so only the download scripts read it.) */
 (function (root) {
   'use strict';
   var WB = (root.WB = root.WB || {});
-  var ALLOWED = ['opds.library.kiwix.org', 'huggingface.co', 'build-metadata.protomaps.dev'];
+  var ALLOWED = ['opds.library.kiwix.org', 'huggingface.co'];
 
   function online() { return root.navigator ? root.navigator.onLine !== false : true; }
   function allowed() { return !WB.store.state.settings.strict; }

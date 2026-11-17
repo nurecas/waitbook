@@ -40,7 +40,7 @@ test('the page has a strict CSP and every script it loads exists and is precache
     assert.ok(fs.existsSync(path.join(ROOT, s)), 'missing ' + s);
     assert.ok(sw.includes("'" + s + "'"), 'not precached: ' + s);
   });
-  [...sw.matchAll(/'([a-z0-9_./-]+\.(?:js|css|png|svg|woff2|webmanifest|html))'/g)].forEach((m) => assert.ok(fs.existsSync(path.join(ROOT, m[1])), 'sw lists missing ' + m[1]));
+  [...sw.matchAll(/'([a-z0-9_.@/-]+\.(?:js|css|png|svg|woff2|webmanifest|html|json|pbf))'/g)].forEach((m) => assert.ok(fs.existsSync(path.join(ROOT, m[1])), 'sw lists missing ' + m[1]));
 });
 
 test('network access only goes through js/ui/net.js and the map’s local glyph fetch', () => {

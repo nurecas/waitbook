@@ -134,13 +134,20 @@
     return {
       version: 8,
       glyphs: 'wbglyphs://{fontstack}/{range}.pbf',
-      sources: { v: { type: 'vector', url: 'pmtiles://' + name, attribution: (meta && meta.attribution) ? '' : '© OpenStreetMap' } },
+      sources: { v: { type: 'vector', url: 'pmtiles://' + name, attribution: '' } }, // the file's own credit is shown as text
       layers: layers.concat(polys, lines, points),
     };
   }
 
+  /** Text of an HTML snippet from a file (tags dropped, entities decoded), short. */
+  function plainText(s) {
+    if (typeof s !== 'string') return '';
+    return WB.util.decodeXmlEntities(s.replace(/<[^>]*>/g, ' ').replace(/&copy;/gi, '©')).replace(/\s+/g, ' ').trim().slice(0, 200);
+  }
+
   function rasterStyle(name) {
-    return { version: 8, sources: { r: { type: 'raster', url: 'pmtiles://' + name, tileSize: 256 } }, layers: [{ id: 'r', type: 'raster', source: 'r' }] };
+    // attribution '' overrides the file's own (HTML from an unknown file); it is shown as plain text instead.
+    return { version: 8, sources: { r: { type: 'raster', url: 'pmtiles://' + name, tileSize: 256, attribution: '' } }, layers: [{ id: 'r', type: 'raster', source: 'r' }] };
   }
 
   WB.views.map = {
@@ -166,6 +173,8 @@
       el.appendChild(fileInput);
       var fileNote = h('p.small.muted', { role: 'status', style: { 'margin-top': '.6rem' } });
       el.appendChild(fileNote);
+      var credit = h('p.small.muted', { dir: 'auto' });
+      el.appendChild(credit);
 
       var map = null;
       var marker = null;
@@ -184,13 +193,18 @@
           container: canvas,
           style: worldStyle(dark),
           center: [20, 15], zoom: 1.4,
-          attributionControl: { compact: true },
+          attributionControl: false,
           localIdeographFontFamily: "'PingFang SC', 'Hiragino Sans', 'Microsoft YaHei', 'Noto Sans CJK SC', 'Malgun Gothic', sans-serif",
           dragRotate: false, pitchWithRotate: false,
         });
-        map.addControl(new ml.NavigationControl({ showCompass: false }), 'top-left');
-        map.addControl(new ml.ScaleControl({ unit: 'metric' }), 'bottom-right');
+        // MapLibre places controls by physical corner; mirror them in right-to-left languages so they stay clear of
+        // the app's own tools (top, inline end) and the coordinates (bottom, inline start).
+        var rtl = U.isRtl(WB.i18n.lang);
+        map.addControl(new ml.NavigationControl({ showCompass: false }), rtl ? 'top-right' : 'top-left');
+        map.addControl(new ml.ScaleControl({ unit: 'metric' }), rtl ? 'bottom-left' : 'bottom-right');
+        map.addControl(new ml.AttributionControl({ compact: true }), rtl ? 'bottom-left' : 'bottom-right');
         map.on('move', updateCoords);
+        map.on('moveend', function () { if (mk.region === '@view') draw(); }); // "this view" follows the map
         updateCoords();
         var region = S.state.kit.region;
         var box = region && WB.catalog.regionBox(region);
@@ -221,6 +235,9 @@
             if (hd.tileType !== 1) map.setStyle(rasterStyle(file.name));
             else if (isProtomapsV4(meta)) map.setStyle(fileStyle(file.name, dark));
             else map.setStyle(genericStyle(file.name, meta, dark));
+            // Credit from the file, as text only (Protomaps basemaps carry theirs in the map's own credit line).
+            var own = isProtomapsV4(meta) && hd.tileType === 1 ? '' : plainText(meta.attribution);
+            credit.textContent = own ? t('map.credit', { text: own }) : '';
             setPlaceholder(false);
             fileNote.textContent = t('map.loaded', { name: file.name, size: U.bytes(file.size, WB.i18n.lang), z: hd.maxZoom });
             if (hd.minLon < hd.maxLon && hd.minLat < hd.maxLat) map.fitBounds([[hd.minLon, hd.minLat], [hd.maxLon, hd.maxLat]], { padding: 20, duration: 0 });
@@ -268,24 +285,27 @@
       maker.appendChild(out);
       el.appendChild(maker);
 
-      var latest = null;
-      if (WB.net.canFetch()) WB.resolve.protomapsLatest(WB.net.fetcher).then(function (k) { latest = k; draw(); }).catch(function () {});
 
-      function areaBox() {
+      /** The boxes to cut: the visible area (longitudes brought back to -180..180; west > east when the view crosses
+          180°), or every part of the chosen region. */
+      function areaBoxes() {
         if (mk.region === '@view') {
           if (!map) return null;
-          var b = map.getBounds();
-          return [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()].map(function (v) { return Math.round(v * 100) / 100; });
+          var bb = map.getBounds();
+          var w = bb.getWest(), e = bb.getEast();
+          var wrap = function (x) { return ((x + 180) % 360 + 360) % 360 - 180; };
+          if (e - w >= 360) { w = -180; e = 180; } else { w = wrap(w); e = wrap(e); if (e === -180) e = 180; }
+          return [[w, U.clamp(bb.getSouth(), -85, 85), e, U.clamp(bb.getNorth(), -85, 85)].map(function (v) { return Math.round(v * 100) / 100; })];
         }
-        return mk.region ? WB.exporters.bboxFor(mk.region) : null;
+        return mk.region ? WB.exporters.boxesFor(mk.region) : null;
       }
 
       function draw() {
         WB.dom.clear(out);
-        var b = areaBox();
-        if (!b) { out.appendChild(h('p.muted.small', t('map.pickFirst'))); return; }
+        var boxes = areaBoxes();
+        if (!boxes) { out.appendChild(h('p.muted.small', t('map.pickFirst'))); return; }
         var z = parseInt(mk.zoom.slice(1), 10);
-        var est = WB.catalog.estimateMap(b, z);
+        var est = WB.catalog.estimateMap(boxes, z);
         out.appendChild(h('p', t('map.estimate', { size: U.bytes(est, WB.i18n.lang) }), ' ', h('span.small.muted', t('map.estimateNote'))));
         if (mk.region && mk.region !== '@view') {
           var inKit = WB.kit.has(S.state.kit, 'pmtiles-area');
@@ -295,20 +315,27 @@
             draw();
           } } }, icon('plus'), inKit ? t('map.updateKit') : t('map.addKit'))));
         }
-        var build = latest || 'YYYYMMDD.pmtiles';
-        var bbox = b.join(',');
-        var name = 'map-' + (mk.region === '@view' ? 'area' : mk.region.replace('@', '').toLowerCase()) + '-' + mk.zoom + '.pmtiles';
+        var build = 'YYYYMMDD.pmtiles'; // the build list cannot be read from a browser; the scripts look it up
+        var base = 'map-' + (mk.region === '@view' ? 'area' : mk.region.replace('@', '').toLowerCase()) + '-' + mk.zoom;
+        var name = base + '.pmtiles';
         out.appendChild(h('h3', { style: { 'margin-top': '1.25rem' } }, t('map.byHand')));
         out.appendChild(h('p.small', t('map.byHandLede'), ' ', P.extLink('https://github.com/protomaps/go-pmtiles/releases', t('map.getTool'))));
-        if (b[0] > b[2]) out.appendChild(h('p.small.muted', t('map.antimeridian')));
-        var line = 'pmtiles extract https://build.protomaps.com/' + build + ' ' + name + ' --bbox=' + bbox + ' --maxzoom=' + z;
+        var arg = WB.exporters.areaArg(boxes);
+        var areaOpt = '--bbox=' + arg;
+        if (arg.charAt(0) === '{') {
+          // Several parts (or across 180°): the tool takes them as a GeoJSON file.
+          areaOpt = '--region=' + base + '.geojson';
+          out.appendChild(h('p.small', t('map.areaParts', { n: boxes.length }), ' ',
+            h('button.btn.btn-small', { type: 'button', on: { click: function () { WB.dom.download(base + '.geojson', arg, 'application/geo+json'); } } }, icon('download'), t('map.areaFile'))));
+        }
+        var line = 'pmtiles extract https://build.protomaps.com/' + build + ' ' + name + ' ' + areaOpt + ' --maxzoom=' + z;
         out.appendChild(cmd(line + ' --dry-run'));
         out.appendChild(cmd(line));
-        if (!latest) out.appendChild(h('p.small.muted', t('map.buildNote')));
+        out.appendChild(h('p.small.muted', t('map.buildNote')));
       }
 
       function cmd(text) {
-        return h('div.cmd', h('pre', h('code', text)), h('button.icon-btn', { type: 'button', 'aria-label': t('item.copy'), on: { click: function () { WB.dom.copy(text).then(function () { WB.dom.toast(t('item.copied')); }); } } }, icon('copy')));
+        return h('div.cmd', h('pre', h('code', text)), h('button.icon-btn', { type: 'button', 'aria-label': t('item.copy'), on: { click: function () { WB.dom.copyToast(text); } } }, icon('copy')));
       }
       draw();
 

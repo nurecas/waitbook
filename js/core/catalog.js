@@ -8,24 +8,27 @@
 
   var data = { shelves: [], items: [] };
   var byId = Object.create(null);
-  var known = {};      // stem -> [date, bytes, 'eng', dirIndex]
+  var known = Object.create(null);    // stem -> [date, bytes, 'eng', dirIndex]
   var dirs = [];
-  var patterns = {};   // pattern -> { code: { l: 'fr', f: ['maxi', 'nopic'] } }
-  var regions = {};    // ISO2 or group id -> stem (maps)
+  var patterns = Object.create(null); // pattern -> { code: { l: 'fr', f: ['maxi', 'nopic'] } }
+  var regions = Object.create(null); // ISO2 or group id -> stem (maps)
   var missing = Object.create(null); // names the last refresh did not find
-  var live = {};       // stem -> { date, size, url, dir, at }
+  var names = Object.create(null); // stem -> catalog <name>, where it is not simply the stem without its flavour
+  var live = Object.create(null); // stem -> { date, size, url, dir, at }
   var apps = {};
 
   function init(opts) {
     opts = opts || {};
     data = opts.catalog || root.WB_CATALOG || data;
     var k = opts.kiwix || root.WB_KIWIX_KNOWN || {};
-    known = k.files || {};
+    // Lookups by name use maps without a prototype, so a name like "constructor" from a shared kit finds nothing.
+    known = bare(k.files);
     dirs = k.dirs || [];
-    patterns = k.patterns || {};
-    regions = k.regions || {};
+    patterns = bare(k.patterns);
+    regions = bare(k.regions);
     missing = Object.create(null);
     (k.missing || []).forEach(function (r) { missing[r] = true; });
+    names = bare(k.names);
     apps = opts.apps || (root.WB_APPS && root.WB_APPS.apps) || {};
     byId = Object.create(null);
     data.items.forEach(function (it, i) {
@@ -35,7 +38,8 @@
     return api;
   }
 
-  function setLive(map) { live = map || {}; }
+  function bare(o) { return Object.assign(Object.create(null), o || {}); }
+  function setLive(map) { live = bare(map); }
   function liveInfo() { return live; }
   function item(id) { return byId[id] || null; }
   function items() { return data.items; }
@@ -44,6 +48,9 @@
   function app(id) { return apps[id] || null; }
 
   function isPattern(k) { return typeof k === 'string' && k.indexOf('{') !== -1; }
+
+  /** The name the Kiwix catalog lists a book under (usually the stem without its flavour, but not always). */
+  function opdsName(stem) { return names[stem] || WB.opds.splitStem(stem).name; }
 
   /** The last catalog refresh looked for this Kiwix name (or pattern) and did not find it, and no live answer since. */
   function isMissing(ref) { return !!missing[ref] && !live[ref]; }
@@ -210,13 +217,15 @@
       var hv = editionObj(it, ed);
       var hf = hv.hf || it.hf;
       var lvh = live['hf:' + hf.repo + '/' + hf.file];
-      out.push({ key: 'h:' + hf.repo + '/' + hf.file, kind: 'hf', url: 'https://huggingface.co/' + hf.repo + '/resolve/main/' + hf.file, name: hf.file, size: lvh ? lvh.size : (hv.size || it.size || null), repo: hf.repo, src: lvh ? 'live' : 'catalog' });
+      // A recent lookup pins the link to the revision it read (its checksum belongs to that file); otherwise 'main'.
+      var rev = lvh && typeof lvh.rev === 'string' && /^[0-9a-f]{40}$/.test(lvh.rev) && Date.now() - (lvh.at || 0) < 30 * 864e5 ? lvh.rev : 'main';
+      out.push({ key: 'h:' + hf.repo + '/' + hf.file, kind: 'hf', url: 'https://huggingface.co/' + hf.repo + '/resolve/' + rev + '/' + hf.file, name: hf.file, size: lvh ? lvh.size : (hv.size || it.size || null), repo: hf.repo, src: lvh ? 'live' : 'catalog' });
       return out;
     }
     if (it.pmtiles) {
       var z = parseInt(String(ed).replace(/\D/g, ''), 10) || 12;
       vals.forEach(function (v) {
-        out.push({ key: 'm:' + it.id + ':' + (v || 'custom'), kind: 'pmtiles', region: v, zoom: z, name: 'map-' + String(v || 'area').toLowerCase() + '.pmtiles', size: estimateMap(regionBox(v), z), est: true, url: null });
+        out.push({ key: 'm:' + it.id + ':' + (v || 'custom'), kind: 'pmtiles', region: v, zoom: z, name: 'map-' + String(v || 'area').toLowerCase() + '.pmtiles', size: estimateMap(regionBoxes(v), z), est: true, url: null });
       });
       return out;
     }
@@ -257,20 +266,41 @@
   // Rough size of a Protomaps extract: the planet at that zoom (about 120 GB at z15, halving per level) times the
   // share of the Earth's surface in the box, weighted up because mapped detail concentrates on land and in towns.
   var EARTH_KM2 = 510e6;
+  /** Size estimate for one box or a list of boxes [w,s,e,n] (west > east crosses the antimeridian). */
   function estimateMap(b, z) {
-    if (!b) return null;
+    if (!b || !b.length) return null;
+    var list = Array.isArray(b[0]) ? b : [b];
     var planet = 120e9 / Math.pow(2, 15 - Math.min(15, Math.max(0, z)));
-    var w = b[0] > b[2] ? (180 - b[0]) + (b[2] + 180) : b[2] - b[0];
-    var midLat = (b[1] + b[3]) / 2 * Math.PI / 180;
-    var km2 = Math.abs(w * 111.32 * Math.cos(midLat)) * Math.abs((b[3] - b[1]) * 110.57);
-    var share = Math.min(1, (km2 / EARTH_KM2) * 6);
-    return Math.max(20e6, Math.round(planet * share));
+    var share = 0;
+    list.forEach(function (x) {
+      var w = x[0] > x[2] ? (180 - x[0]) + (x[2] + 180) : x[2] - x[0];
+      var midLat = (x[1] + x[3]) / 2 * Math.PI / 180;
+      share += Math.abs(w * 111.32 * Math.cos(midLat)) * Math.abs((x[3] - x[1]) * 110.57) / EARTH_KM2 * 6;
+    });
+    return Math.max(20e6, Math.round(planet * Math.min(1, share)));
   }
-  function regionBox(v) {
-    if (v === '@world') return [-180, -85, 180, 85];
+
+  // Continents, as the boxes their maps are cut from. Oceania is several boxes so it reaches the Pacific islands
+  // (Palau to French Polynesia) without the empty ocean between them.
+  var GROUP_BOXES = {
+    '@world': [[-180, -85, 180, 85]],
+    '@africa': [[-25.4, -35.0, 63.6, 37.6]],
+    '@europe': [[-31.3, 34.5, 45.0, 71.2]],
+    '@asia': [[25.0, -11.0, 180, 77.8]],
+    '@north-america': [[-168.0, 7.0, -52.0, 83.2]],
+    '@central-america': [[-92.3, 7.0, -59.4, 27.3]],
+    '@south-america': [[-81.4, -56.0, -34.7, 13.4]],
+    '@oceania': [[112, -44, 156, 0], [165, -48, 179.9, -34], [156, -23, -169, 0], [130, 0, 173, 21], [-166, -28, -134, 5]],
+  };
+  /** Every box a region covers: a country's main part and its far parts (islands, exclaves), or a continent. */
+  function regionBoxes(v) {
+    if (GROUP_BOXES[v]) return GROUP_BOXES[v].map(function (b) { return b.slice(); });
     var c = (root.WB_COUNTRIES || {})[v];
-    return c && c.b ? c.b : null;
+    if (!c || !c.b) return null;
+    return [c.b].concat(c.x || []).map(function (b) { return b.slice(); });
   }
+  /** The main box (for framing the map view). */
+  function regionBox(v) { var l = regionBoxes(v); return l ? l[0] : null; }
 
   function sizeOf(files) {
     var total = 0, unknown = 0;
@@ -341,7 +371,7 @@
     axis: axis, editions: editions, editionsFor: editionsFor, defaultEdition: defaultEdition, editionObj: editionObj,
     stemFor: stemFor, langs: langs, kiwixFacts: kiwixFacts, filesFor: filesFor, defaultValues: defaultValues,
     sizeOf: sizeOf, matchesLangs: matchesLangs, search: search, filter: filter, allKiwixRefs: allKiwixRefs,
-    isPattern: isPattern, isMissing: isMissing, options: options, gone: gone, regionList: regionList, codeForLang: codeForLang, estimateMap: estimateMap, regionBox: regionBox,
+    isPattern: isPattern, isMissing: isMissing, opdsName: opdsName, options: options, gone: gone, regionList: regionList, codeForLang: codeForLang, estimateMap: estimateMap, regionBox: regionBox, regionBoxes: regionBoxes,
   };
   WB.catalog = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

@@ -150,5 +150,10 @@
     return loaded[href];
   }
 
-  WB.dom = { h: h, append: append, icon: icon, clear: clear, $: $, $$: $$, announce: announce, toast: toast, sheet: sheet, copy: copy, download: download, loadScript: loadScript, loadStyle: loadStyle, safeHref: safeHref };
+  /** Copy and say whether it worked (clipboards can be blocked, e.g. on file:// or without a user gesture). */
+  function copyToast(text) {
+    return copy(text).then(function () { toast(WB.i18n.t('item.copied')); }, function () { toast(WB.i18n.t('item.copyFailed')); });
+  }
+
+  WB.dom = { h: h, append: append, icon: icon, clear: clear, $: $, $$: $$, announce: announce, toast: toast, sheet: sheet, copy: copy, copyToast: copyToast, download: download, loadScript: loadScript, loadStyle: loadStyle, safeHref: safeHref };
 })(typeof self !== 'undefined' ? self : globalThis);

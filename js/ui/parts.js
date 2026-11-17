@@ -105,10 +105,10 @@
     var sizeEl = h('div.row-size', h('span', sizeText(si)), si.page ? null : h('small', on && en ? '' : t('size.default')));
     r.appendChild(h('label.tick-hit', { for: tickId }, tick));
     r.appendChild(h('div',
-      h('a.row-title', { href: '#/item/' + encodeURIComponent(it.id) }, h('span.hl-text', it.title)),
-      h('div.row-meta', h('span', it.by), stamps(it)),
+      h('a.row-title', { href: '#/item/' + encodeURIComponent(it.id) }, h('span.hl-text', { lang: 'en', dir: 'auto' }, it.title)),
+      h('div.row-meta', h('span', { dir: 'auto' }, it.by), stamps(it)),
       on && en && entrySummary(it, en) ? h('div.row-variant', entrySummary(it, en)) : null,
-      opts.desc === false ? null : h('p.row-desc', it.desc)));
+      opts.desc === false ? null : h('p.row-desc', { lang: 'en', dir: 'auto' }, it.desc)));
     r.appendChild(sizeEl);
     return r;
   }

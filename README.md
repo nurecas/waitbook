@@ -55,7 +55,9 @@ States — Waitbook takes the same idea global:
 **Online:** deploy the repository as a static site (GitHub Pages: enable Pages with "GitHub Actions" as the
 source, then run the *Deploy to GitHub Pages* workflow or push to `main`). Open it once, then install it:
 iPhone/iPad Safari → Share → Add to Home Screen; Android Chrome → Install app; desktop Chrome/Edge → install icon;
-Mac Safari → File → Add to Dock. After the first visit it works offline.
+Mac Safari → File → Add to Dock. After the first visit it works offline: every screen, all ten interface
+languages, and the map viewer and Kiwix snapshot (fetched quietly in the background; *Settings → Ready for offline
+use* shows what is saved). App updates keep what was saved.
 
 **Locally:** `python3 -m http.server 8765` in this folder, then open http://127.0.0.1:8765/.
 
@@ -69,7 +71,25 @@ Kiwix publishes new dated files monthly and keeps only the two newest, so Waitbo
 
 1. in the app, live from `opds.library.kiwix.org` when you ask (*Check sizes and newest files*);
 2. in the download scripts, at the moment you run them;
-3. from `data/kiwix-known.js`, a snapshot refreshed by `tools/refresh-kiwix.mjs` — weekly in CI.
+3. from `data/kiwix-known.js`, a snapshot refreshed by `tools/refresh-kiwix.mjs` — weekly in CI, which commits the
+   new data and redeploys the site. If Kiwix withdraws a curated book, the app marks it as withdrawn (and leaves it
+   out of quick kits and field cards), and the run fails with suggested replacements so a maintainer can update
+   `data/catalog.js`.
+
+Books are found by the name the catalog lists them under, with a text search as a fallback when a book is renamed.
+
+### The download scripts
+
+`waitbook-download.sh` (macOS, Linux, Android/Termux) and `waitbook-download.ps1` (Windows PowerShell 5.1 or 7) can be
+run again at any time:
+
+- finished files are skipped, interrupted ones resume, and a server that cannot resume starts the file again;
+- checksums are verified where publishers provide them (Kiwix `.sha256` files; Hugging Face, pinned to the revision
+  the checksum came from); a file that does not match is kept aside as `.bad`;
+- when Kiwix publishes a newer version of a book you already have, yours is kept: set `WAITBOOK_UPDATE=1` to download
+  the new one (the old one is removed once the new one is complete);
+- map cuts use the newest Protomaps build and cover every part of a country (Alaska and Hawaii, the Canaries…);
+- without a destination they make a `Waitbook` folder next to the script; `WAITBOOK_VERIFY=0` skips checksums.
 
 Catalog patterns such as `wikipedia_{lang}_medicine_{flavour}` are expanded against the live catalog using its own
 language metadata, so new languages appear automatically.
@@ -77,8 +97,9 @@ language metadata, so new languages appear automatically.
 ## Privacy and safety
 
 No accounts, cookies, analytics or ads. Everything you choose stays in your browser's storage. The app contacts
-only Kiwix (catalog), Hugging Face (AI file sizes) and Protomaps (map build list), only when you use those features,
-never with *Strict offline* on — enforced by a Content-Security-Policy that allows nothing else. Downloads go from
+only Kiwix (catalog) and Hugging Face (AI file sizes), only when you use those features, never with *Strict offline*
+on — enforced by a Content-Security-Policy that allows nothing else. (The download scripts also read the Protomaps
+build list and, for map cuts, fetch the pmtiles tool from GitHub.) Downloads go from
 the publisher straight to you. Generated scripts accept only validated `https://` links and safe file names, quote
 every value, and verify checksums where publishers provide them. Field cards follow published guidance (IFRC,
 WHO, Hesperian) and never give doses or procedures of their own; they were not clinically reviewed.

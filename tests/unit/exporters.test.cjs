@@ -54,8 +54,10 @@ test('curated titles cannot break out of script comments', () => {
   const k = K.empty();
   K.add(k, 'wikimed', 'mini', ['en']);
   const sh = X.bash(X.plan(k));
+  const ps = X.powershell(X.plan(k));
   it.title = saved;
-  sh.split('\n').forEach((l) => assert.ok(!/^(rm|echo pwned)/.test(l.trim()), l));
+  // The injected lines must never appear as commands of their own.
+  sh.split('\n').concat(ps.split('\r\n')).forEach((l) => assert.ok(!/^(rm -rf ~|echo pwned)/.test(l.trim()), l));
 });
 
 test('links.txt and aria2 lists contain only validated URLs', () => {

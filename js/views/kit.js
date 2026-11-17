@@ -167,11 +167,11 @@
             var url = base + '#/import/' + code;
             var input = h('input', { type: 'text', readonly: true, value: url, 'aria-label': t('kit.shareLink') });
             linkOut.appendChild(h('div.field', { style: { 'margin-top': '1rem' } }, h('label', t('kit.shareLink')), input));
-            var row = h('div.btn-row', { style: { 'margin-top': '.5rem' } }, h('button.btn.btn-small', { type: 'button', on: { click: function () { WB.dom.copy(url).then(function () { WB.dom.toast(t('item.copied')); }); } } }, icon('copy'), t('item.copy')));
+            var row = h('div.btn-row', { style: { 'margin-top': '.5rem' } }, h('button.btn.btn-small', { type: 'button', on: { click: function () { WB.dom.copyToast(url); } } }, icon('copy'), t('item.copy')));
             if (navigator.share) row.appendChild(h('button.btn.btn-small', { type: 'button', on: { click: function () { navigator.share({ title: 'Waitbook kit', url: url }).catch(function () {}); } } }, icon('share'), t('kit.systemShare')));
             linkOut.appendChild(row);
             input.select();
-          });
+          }).catch(function () { WB.dom.toast(t('kit.shareFailed')); });
         });
         panel.appendChild(h('p', t('kit.shareLede')));
         panel.appendChild(btn);
@@ -187,7 +187,7 @@
       }
 
       function cmd(text) {
-        return h('div.cmd', h('pre', h('code', text)), h('button.icon-btn', { type: 'button', 'aria-label': t('item.copy'), on: { click: function () { WB.dom.copy(text).then(function () { WB.dom.toast(t('item.copied')); }); } } }, icon('copy')));
+        return h('div.cmd', h('pre', h('code', text)), h('button.icon-btn', { type: 'button', 'aria-label': t('item.copy'), on: { click: function () { WB.dom.copyToast(text); } } }, icon('copy')));
       }
 
       drawExport();

@@ -52,20 +52,23 @@
 
       function langsParam() { return state.lang === 'mine' ? S.state.kit.langs : state.lang ? [state.lang] : []; }
 
+      var seq = 0; // answers to an older search are ignored
       function run(append) {
+        var mine = ++seq;
         WB.router.setQuery({ q: state.q, lang: state.lang === (S.state.kit.langs.length ? 'mine' : '') ? '' : state.lang, cat: state.cat });
         if (!append) { WB.dom.clear(list); }
         WB.dom.clear(more);
         status.textContent = t('kx.searching');
         if (live) {
           WB.resolve.search({ q: state.q, lang: langsParam(), category: state.cat, count: PAGE, start: state.start }, WB.net.fetcher)
-            .then(function (feed) { show(feed.entries, feed.total, append); })
-            .catch(function () { live = false; status.textContent = t('kx.fellBack'); offline(append); });
-        } else offline(append);
+            .then(function (feed) { if (mine === seq) show(feed.entries, feed.total, append); })
+            .catch(function () { if (mine !== seq) return; live = false; status.textContent = t('kx.fellBack'); offline(append, mine); });
+        } else offline(append, mine);
       }
 
-      function offline(append) {
+      function offline(append, mine) {
         WB.dom.loadScript('data/kiwix-snapshot.js').then(function () {
+          if (mine !== seq) return;
           var rows = snapshotRows() || [];
           var f = U.fold(state.q);
           var words = f ? f.split(' ') : [];

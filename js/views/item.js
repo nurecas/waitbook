@@ -26,7 +26,7 @@
       var sizeBig = h('div.item-size', { 'aria-live': 'polite' });
       var mainBtn = h('button.btn', { type: 'button' });
       var head = h('header.item-head',
-        h('div', h('h1', it.title), h('div.row-meta', h('span', it.by), P.stamps(it))),
+        h('div', h('h1', { lang: 'en', dir: 'auto' }, it.title), h('div.row-meta', h('span', { dir: 'auto' }, it.by), P.stamps(it))),
         h('div.item-side', h('div.small.muted', t('item.yourChoice')), sizeBig, h('div', { style: { 'margin-top': '.75rem' } }, mainBtn)));
       el.appendChild(head);
       if (C.gone(it)) {
@@ -41,7 +41,7 @@
       body.appendChild(right);
       el.appendChild(body);
 
-      left.appendChild(h('p', it.desc));
+      left.appendChild(h('p', { lang: 'en', dir: 'auto' }, it.desc));
       if (it.note) left.appendChild(h('div.note', icon('info'), h('p', it.note)));
       if (it.needs) left.appendChild(h('div.note', icon('info'), h('p', t('item.needs', { needs: it.needs }))));
       if (it.kind === 'model') left.appendChild(h('div.note.warn', icon('warn'), h('p', t('item.aiCaution'))));
@@ -211,7 +211,7 @@
 
       function copyBtn(text) {
         var b = h('button.btn.btn-small.btn-quiet', { type: 'button' }, icon('copy'), t('item.copy'));
-        b.addEventListener('click', function () { WB.dom.copy(text).then(function () { WB.dom.toast(t('item.copied')); }, function () { WB.dom.toast(t('item.copyFailed')); }); });
+        b.addEventListener('click', function () { WB.dom.copyToast(text); });
         return b;
       }
 
