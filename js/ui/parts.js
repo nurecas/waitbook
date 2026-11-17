@@ -68,7 +68,7 @@
       return out;
     }
     langs.slice(0, 5).forEach(function (l) {
-      out.appendChild(h('span.stamp' + (mine.indexOf(l) !== -1 ? '.is-match' : ''), { title: WB.i18n.langName(l), lang: l }, l.toUpperCase()));
+      out.appendChild(h('span.stamp' + (mine.indexOf(l) !== -1 ? '.is-match' : ''), { title: WB.i18n.langName(l), lang: WB.util.langAttr(l) }, l.toUpperCase()));
     });
     if (langs.length > 5) out.appendChild(h('span.stamp', '+' + (langs.length - 5)));
     return out;

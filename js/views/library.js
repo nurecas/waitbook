@@ -31,7 +31,7 @@
       var langs = P.contentLanguages();
       var langOpts = [{ value: 'all', label: t('lib.allLangs') }];
       if (S.state.kit.langs.length) langOpts.unshift({ value: 'mine', label: t('lib.myLangs', { langs: S.state.kit.langs.map(function (l) { return WB.i18n.langName(l); }).join(', ') }) });
-      langOpts.push({ group: t('lib.oneLang'), options: langs.map(function (l) { return { value: l.code, label: l.name, lang: l.code }; }) });
+      langOpts.push({ group: t('lib.oneLang'), options: langs.map(function (l) { return { value: l.code, label: l.name, lang: WB.util.langAttr(l.code) }; }) });
 
       var search = h('input', { type: 'search', id: 'libQ', value: state.q, placeholder: t('lib.searchPh'), autocomplete: 'off', enterkeyhint: 'search' });
       var toolbar = h('div.toolbar', { role: 'search' },

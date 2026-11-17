@@ -39,7 +39,7 @@
       h('span.brand-mark', { 'aria-hidden': 'true' }, document.querySelector('.masthead .brand-mark svg').cloneNode(true)),
       h('span.brand-word', 'Waitbook')), h('span.tag', t('app.tagline'))));
     NAV.forEach(function (n) {
-      if (n.sep) { list.appendChild(h('li.nav-sep', { role: 'presentation' })); return; }
+      if (n.sep) { list.appendChild(h('li.nav-sep', { 'aria-hidden': 'true' })); return; }
       list.appendChild(h('li', h('a.nav', { href: n.href, dataset: { nav: n.id } }, icon(n.icon), h('span', t('nav.' + n.id)), n.badge ? h('span.badge', { 'aria-label': '' }) : null)));
     });
     var tabs = WB.dom.clear(document.getElementById('tabbar'));
@@ -124,11 +124,19 @@
     });
   }
 
+  // The visible "EN" stays inside the accessible name ("Language: EN"), as WCAG 2.5.3 asks.
+  function setQuickLang() {
+    var btn = document.getElementById('quickLang');
+    btn.removeAttribute('aria-label');
+    var hidden = btn.querySelector('.sr-only') || btn.insertBefore(h('span.sr-only'), document.getElementById('quickLangCode'));
+    hidden.textContent = t('settings.language') + ': ';
+    document.getElementById('quickLangCode').textContent = WB.i18n.lang.toUpperCase();
+  }
+
   function setLanguage(code) {
     S.setSettings({ lang: code });
     return WB.i18n.setLang(code).then(function () {
-      document.getElementById('quickLangCode').textContent = WB.i18n.lang.toUpperCase();
-      document.getElementById('quickLang').setAttribute('aria-label', t('settings.language') + ': ' + (WB.i18n.UI.filter(function (u) { return u.code === WB.i18n.lang; })[0] || {}).name);
+      setQuickLang();
       buildNav();
       renderNet();
       WB.router.render({ soft: true });
@@ -155,8 +163,7 @@
     applySettings(s);
     var code = s.lang || WB.i18n.bestMatch(navigator.languages || [navigator.language]);
     WB.i18n.setLang(code).then(function () {
-      document.getElementById('quickLangCode').textContent = WB.i18n.lang.toUpperCase();
-      document.getElementById('quickLang').setAttribute('aria-label', t('settings.language'));
+      setQuickLang();
       document.getElementById('quickLang').addEventListener('click', quickLang);
       buildNav();
       renderNet();

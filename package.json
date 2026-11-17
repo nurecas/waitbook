@@ -1,0 +1,26 @@
+{
+  "name": "waitbook",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A library that waits for you: a global, multilingual index of free offline knowledge with download plans for any device.",
+  "license": "MIT",
+  "scripts": {
+    "serve": "python3 -m http.server 8765 --bind 127.0.0.1",
+    "test": "node --test tests/unit/*.test.cjs tests/e2e/script.test.cjs",
+    "test:unit": "node --test tests/unit/*.test.cjs",
+    "test:scripts": "node --test tests/e2e/script.test.cjs",
+    "test:smoke": "node tests/e2e/smoke.mjs",
+    "test:a11y": "node tests/e2e/a11y.mjs",
+    "check:i18n": "node tools/check-i18n.mjs",
+    "check:links": "node tools/check-links.mjs",
+    "refresh:kiwix": "node tools/refresh-kiwix.mjs",
+    "build:vendor": "node tools/vendor.mjs",
+    "build:geo": "node tools/build-geo.mjs",
+    "build:icons": "node tools/build-icons.mjs"
+  },
+  "devDependencies": {
+    "axe-core": "4.14.1",
+    "playwright": "1.63.0"
+  },
+  "engines": { "node": ">=18" }
+}

@@ -57,7 +57,10 @@
       });
     }
     if (raw.done && typeof raw.done === 'object') {
-      Object.keys(raw.done).slice(0, 2000).forEach(function (key) { if (/^[A-Za-z0-9:._@\/-]{1,200}$/.test(key) && raw.done[key]) k.done[key] = 1; });
+      Object.keys(raw.done).slice(0, 2000).forEach(function (key) {
+        if (key === '__proto__' || key === 'constructor' || key === 'prototype') return;
+        if (/^[A-Za-z0-9:._@\/-]{1,200}$/.test(key) && raw.done[key]) k.done[key] = 1;
+      });
     }
     k.updated = typeof raw.updated === 'number' ? raw.updated : 0;
     return k;
@@ -211,7 +214,9 @@
       }
       return false;
     }
-    // Upgrade an added item toward a target edition (or as rich as fits).
+    // Upgrade an added item toward a target edition (or as rich as fits). While lower tiers are still to come, one
+    // upgrade may not take more than a third or so of the budget, so a single huge edition can't crowd out the rest.
+    var CAP = budget * 0.35;
     function upgrade(it, richest) {
       var en = kit.entries[it.id];
       if (!en || !it.flavours) return;
@@ -221,6 +226,7 @@
       for (var i = order.indexOf(target); i >= 0 && i < cur; i++) {
         var before = sizeWith(it, en.e, en.v);
         var after = sizeWith(it, order[i], en.v);
+        if (!richest && after > CAP) continue;
         if (used - before + after <= budget) { used = used - before + after; en.e = order[i]; return; }
       }
     }

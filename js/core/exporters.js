@@ -74,7 +74,7 @@
           t.bbox = b;
           t.maxzoom = ZOOMS[r.entry && r.entry.e] || 12;
           t.region = f.region;
-          t.name = U.safeName('map-' + String(f.region || 'area').replace('@', '') + '-z' + t.maxzoom + '.pmtiles');
+          t.name = U.safeName('map-' + String(f.region || 'area').replace('@', '').toLowerCase() + '-z' + t.maxzoom + '.pmtiles');
         } else {
           return;
         }
@@ -294,6 +294,7 @@
     L.push('echo "Done: $OK downloaded, $SKIP already here, $FAIL failed."');
     L.push('if [ "$FAIL" -gt 0 ]; then echo "Failed (run the script again to retry):"; printf "%s" "$FAILED" | tr "|" "\\n" | sed "/^$/d; s/^/  /"; fi');
     L.push('echo "Open $DEST/index.html to browse what you have."');
+    L.push('[ "$FAIL" -eq 0 ]');
     return L.join('\n') + '\n';
   }
 
@@ -439,7 +440,11 @@
     L.push('Write-Host ("Done: {0} downloaded, {1} already here, {2} failed." -f $script:Ok, $script:Skip, $script:Failed.Count)');
     L.push('if ($script:Failed.Count -gt 0) { Write-Host "Failed (run the script again to retry):"; $script:Failed | ForEach-Object { Write-Host "  $_" } }');
     L.push('Write-Host "Open $Dest\\index.html to browse what you have."');
-    return L.join('\r\n') + '\r\n';
+    L.push('# When started by right-click > Run with PowerShell, keep the window open so the summary can be read.');
+    L.push('if (-not [Console]::IsInputRedirected -and -not $env:WAITBOOK_NO_PAUSE) { Read-Host "Press Enter to close" | Out-Null }');
+    L.push('if ($script:Failed.Count -gt 0) { exit 1 }');
+    // A UTF-8 byte-order mark makes Windows PowerShell 5.1 read the file as UTF-8 instead of the legacy code page.
+    return String.fromCharCode(0xfeff) + L.join('\r\n') + '\r\n';
   }
 
   function kitJson(kit) {

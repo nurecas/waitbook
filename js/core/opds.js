@@ -58,6 +58,7 @@
     var m = /^\/zim\/([A-Za-z0-9_.-]+(?:\/[A-Za-z0-9_.-]+)*)\/([^/]+?)(\.meta4)?$/.exec(path);
     if (!m) return null;
     var file = m[2];
+    if (m[1].split('/').some(function (seg) { return seg === '.' || seg === '..'; })) return null;
     if (!parseFile(file)) return null;
     return { dir: m[1], file: file, url: DL + m[1] + '/' + file };
   }

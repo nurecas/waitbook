@@ -28,7 +28,7 @@
       var q = h('input', { type: 'search', id: 'kxQ', value: state.q, placeholder: t('kx.searchPh'), enterkeyhint: 'search', autocomplete: 'off' });
       var langOpts = [{ value: '', label: t('lib.allLangs') }];
       if (S.state.kit.langs.length) langOpts.unshift({ value: 'mine', label: t('lib.myLangs', { langs: S.state.kit.langs.map(function (l) { return WB.i18n.langName(l); }).join(', ') }) });
-      langOpts.push({ group: t('lib.oneLang'), options: P.contentLanguages().map(function (l) { return { value: l.code, label: l.name, lang: l.code }; }) });
+      langOpts.push({ group: t('lib.oneLang'), options: P.contentLanguages().map(function (l) { return { value: l.code, label: l.name, lang: WB.util.langAttr(l.code) }; }) });
       var form = h('form.toolbar', { role: 'search', on: { submit: function (e) { e.preventDefault(); state.q = q.value; state.start = 0; run(false); } } },
         h('div.field', h('label', { for: 'kxQ' }, t('lib.search')), h('div.searchbox', icon('search'), q)),
         P.select('kxLang', t('lib.language'), langOpts, state.lang, function (v) { state.lang = v; state.start = 0; run(false); }),
@@ -105,9 +105,9 @@
         var flavour = /_(maxi|nopic|mini)$/.exec(e.stem);
         r.appendChild(h('label.tick-hit', { for: id }, cb));
         r.appendChild(h('div',
-          h('span.row-title', h('span.hl-text', e.title)),
+          h('span.row-title', { dir: 'auto' }, h('span.hl-text', e.title)),
           h('div.row-meta', h('span.mono.small', e.stem), h('span.stamps', langs, flavour ? h('span.stamp.kind', t('ed.' + flavour[1])) : null, e.category ? h('span.stamp', t('kxcat.' + e.category) !== 'kxcat.' + e.category ? t('kxcat.' + e.category) : e.category) : null)),
-          e.summary ? h('p.row-desc', e.summary) : null,
+          e.summary ? h('p.row-desc', { dir: 'auto' }, e.summary) : null,
           h('div.row-meta', e.date ? h('span', t('item.dated', { date: e.date })) : null, e.articles ? h('span', t('kx.articles', { n: e.articles })) : null,
             e.url ? h('a', { href: e.url }, t('item.download')) : null, curated ? h('a', { href: '#/item/' + curated }, t('kx.curated')) : null)));
         r.appendChild(h('div.row-size', e.size ? U.bytes(e.size, WB.i18n.lang) : '—'));

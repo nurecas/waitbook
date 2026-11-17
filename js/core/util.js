@@ -54,6 +54,8 @@
       .replace(/[̀-ͯ]/g, '')
       .replace(/[^A-Za-z0-9._-]+/g, '-')
       .replace(/-{2,}/g, '-')
+      .replace(/-\./g, '.')
+      .replace(/\.-/g, '.')
       .replace(/^[.-]+/, '')
       .replace(/[-.]+$/, '')
       .slice(0, 150);
@@ -113,25 +115,29 @@
   }
 
   // ISO 639 helpers. WB_LANG3 maps three-letter codes to two-letter ones (generated from CLDR).
-  var three2two = root.WB_LANG3 || {};
+  // Read lazily: data/countries.js (which defines WB_LANG3) may load after this file.
+  function three2two() { return root.WB_LANG3 || {}; }
   var two2three = null;
   function lang1(code) {
     code = String(code || '').toLowerCase().split(/[-_]/)[0];
-    return three2two[code] || code;
+    return three2two()[code] || code;
   }
   function lang3(code) {
-    if (!two2three) {
+    if (!two2three && root.WB_LANG3) {
       two2three = {};
-      Object.keys(three2two).forEach(function (k) { two2three[three2two[k]] = k; });
+      Object.keys(root.WB_LANG3).forEach(function (k) { two2three[root.WB_LANG3[k]] = k; });
       // Kiwix uses the individual-language code for these macrolanguages.
       two2three.zh = 'zho'; two2three.ar = 'ara'; two2three.ms = 'msa'; two2three.fa = 'fas'; two2three.sw = 'swa';
     }
     code = lang1(code);
-    return two2three[code] || code;
+    return (two2three && two2three[code]) || code;
   }
 
   var RTL = { ar: 1, fa: 1, ur: 1, he: 1, ps: 1, sd: 1, ug: 1, yi: 1, dv: 1, ckb: 1, arz: 1, ary: 1 };
   function isRtl(code) { return !!RTL[lang1(code)]; }
+
+  /** A code safe to put in an HTML lang attribute (two-letter primary language), or null. */
+  function langAttr(code) { var c = lang1(code); return /^[a-z]{2}$/.test(c) ? c : null; }
 
   function uniq(list) {
     var seen = Object.create(null);
@@ -146,7 +152,7 @@
   WB.util = {
     GB: GB, bytes: bytes, num: num, clamp: clamp, debounce: debounce, fold: fold, safeName: safeName,
     isSafeUrl: isSafeUrl, hostOf: hostOf, basename: basename, shQuote: shQuote, psQuote: psQuote,
-    escapeHtml: escapeHtml, decodeXmlEntities: decodeXmlEntities, lang1: lang1, lang3: lang3, isRtl: isRtl,
+    escapeHtml: escapeHtml, decodeXmlEntities: decodeXmlEntities, lang1: lang1, lang3: lang3, isRtl: isRtl, langAttr: langAttr,
     uniq: uniq, todayStamp: todayStamp,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = WB.util;

@@ -83,7 +83,7 @@
         function drawChips() {
           WB.dom.clear(chips);
           d.langs.forEach(function (l, i) {
-            chips.appendChild(h('span.chip' + (i === 0 ? '.is-primary' : ''), { role: 'listitem', lang: l },
+            chips.appendChild(h('span.chip' + (i === 0 ? '.is-primary' : ''), { role: 'listitem', lang: WB.util.langAttr(l) },
               h('span', WB.i18n.langName(l), i === 0 ? ' · ' + t('pack.primary') : ''),
               i > 0 ? h('button', { type: 'button', 'aria-label': t('pack.makePrimary', { lang: WB.i18n.langName(l) }), on: { click: function () { d.langs.splice(i, 1); d.langs.unshift(l); persist(); drawChips(); } } }, icon('chev-l', 'flip-rtl')) : null,
               h('button', { type: 'button', 'aria-label': t('pack.removeLang', { lang: WB.i18n.langName(l) }), on: { click: function () { d.langs.splice(i, 1); persist(); drawChips(); draw(); } } }, icon('x'))));
@@ -91,7 +91,7 @@
           var all = P.contentLanguages().filter(function (l) { return d.langs.indexOf(l.code) === -1; });
           var sel = h('select', { id: 'packAddLang', 'aria-label': t('pack.addLang') });
           sel.appendChild(h('option', { value: '' }, '+ ' + t('pack.addLang')));
-          all.forEach(function (l) { sel.appendChild(h('option', { value: l.code, lang: l.code }, l.name)); });
+          all.forEach(function (l) { sel.appendChild(h('option', { value: l.code, lang: WB.util.langAttr(l.code) }, l.name)); });
           sel.addEventListener('change', function () { if (!sel.value) return; d.langs.push(sel.value); persist(); drawChips(); draw(); var s2 = document.getElementById('packAddLang'); if (s2) s2.focus(); });
           chips.appendChild(h('span', { role: 'listitem', style: { 'min-width': '14rem' } }, sel));
         }

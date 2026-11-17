@@ -41,6 +41,34 @@
         hasKit ? h('span', t('home.kitStatus', { n: tot.items, size: WB.util.bytes(tot.bytes, WB.i18n.lang) }), ' ', h('a', { href: '#/kit' }, t('home.openKit'))) : h('span', t('home.noKit')),
         h('a', { href: '#/cards' }, icon('cards'), ' ', t('home.cardsLink'))));
 
+      // Quick kits: one tap fills a kit for a typical device, in the reader's language.
+      var quick = h('div.grid.cols-3');
+      [['pocket', 'phone'], ['household', 'computer'], ['community', 'drive']].forEach(function (q) {
+        var preset = WB.kit.PRESETS[q[0]];
+        quick.appendChild(h('div.box-quiet',
+          h('h3', icon(q[1] === 'phone' ? 'phone' : q[1] === 'computer' ? 'laptop' : 'drive'), ' ', t('home.preset.' + q[0]), ' ', h('span.mono.small.muted', WB.util.bytes(preset.budget, WB.i18n.lang))),
+          h('p.small', t('home.preset.' + q[0] + '.d')),
+          h('button.btn.btn-small', { type: 'button', on: { click: function () {
+            var p = WB.app.platform;
+            var langs = S.state.kit.langs.length ? S.state.kit.langs : WB.util.uniq([WB.i18n.lang, 'en']);
+            var kit = WB.kit.autofill({ langs: langs, region: S.state.kit.region, device: q[1], os: WB.platform.installerOs(p), budget: preset.budget, depth: preset.depth });
+            kit.done = S.state.kit.done || {};
+            function save(next) { S.setKit(next); WB.dom.toast(t('pack.saved')); WB.router.go('#/kit'); }
+            if (!Object.keys(S.state.kit.entries).length && !Object.keys(S.state.kit.extra).length) { save(kit); return; }
+            // Never throw away a hand-picked kit without asking.
+            WB.dom.sheet(t('home.preset.' + q[0]), function (body, close) {
+              body.appendChild(h('p', t('home.kitStatus', { n: WB.kit.totals(S.state.kit).items, size: WB.util.bytes(WB.kit.totals(S.state.kit).bytes, WB.i18n.lang) })));
+              body.appendChild(h('div.btn-row',
+                h('button.btn.btn-primary', { type: 'button', on: { click: function () { close(); save(kit); } } }, t('pack.replace')),
+                h('button.btn', { type: 'button', on: { click: function () { close(); save(WB.kit.merge(S.state.kit, kit)); } } }, t('pack.merge')),
+                h('button.btn.btn-quiet', { type: 'button', on: { click: close } }, t('kit.cancel'))));
+            });
+          } } }, icon('kit'), t('home.preset.use'))));
+      });
+      el.appendChild(h('section.section', { 'aria-labelledby': 'quickTitle' },
+        h('div.section-head', h('h2', { id: 'quickTitle' }, t('home.quick')), h('a', { href: '#/pack' }, t('home.quickCustom'), ' ', icon('chev-r', 'flip-rtl'))),
+        quick));
+
       var shelves = h('ul.shelf-index');
       C.shelves().forEach(function (s, i) {
         var n = C.filter({ shelf: s.id }).length;

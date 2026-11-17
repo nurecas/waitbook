@@ -213,7 +213,7 @@
           ul.appendChild(h('li.row.is-on',
             h('span.tick-hit', removeBtn),
             h('div',
-              r.item ? h('a.row-title', { href: '#/item/' + encodeURIComponent(r.id) }, h('span.hl-text', r.item.title)) : h('span.row-title', h('span.hl-text', r.extra.title)),
+              r.item ? h('a.row-title', { href: '#/item/' + encodeURIComponent(r.id) }, h('span.hl-text', r.item.title)) : h('span.row-title', { dir: 'auto' }, h('span.hl-text', r.extra.title)),
               h('div.row-meta', r.item ? h('span', P.entrySummary(r.item, r.entry)) : h('span.mono', r.extra.stem))),
             h('div.row-size', P.sizeText(si))));
         });

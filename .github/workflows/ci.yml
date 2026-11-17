@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    name: Unit tests and translations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - run: node --test tests/unit/*.test.cjs
+      - run: node tools/check-i18n.mjs
+
+  scripts:
+    name: Download scripts on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      # bash on Ubuntu and macOS, Windows PowerShell 5.1 with curl.exe on Windows.
+      - run: node --test tests/e2e/script.test.cjs
+
+  browser:
+    name: Browsers (${{ matrix.browser }})
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit, firefox]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Serve the app
+        run: python3 -m http.server 8765 --bind 127.0.0.1 &
+      - name: Desktop
+        run: node tests/e2e/smoke.mjs http://127.0.0.1:8765/ --browser ${{ matrix.browser }}
+      - name: Phone
+        run: node tests/e2e/smoke.mjs http://127.0.0.1:8765/ --browser ${{ matrix.browser }} --device "iPhone 15"
+      - name: Tablet
+        run: node tests/e2e/smoke.mjs http://127.0.0.1:8765/ --browser ${{ matrix.browser }} --device "iPad (gen 7)"
+      - name: Right-to-left (Arabic)
+        run: node tests/e2e/smoke.mjs http://127.0.0.1:8765/ --browser ${{ matrix.browser }} --lang ar
+      - name: Accessibility (axe-core)
+        if: matrix.browser == 'chromium'
+        run: node tests/e2e/a11y.mjs http://127.0.0.1:8765/
+      - name: Offline and file:// behaviour
+        if: matrix.browser == 'chromium'
+        run: node tests/e2e/offline.mjs http://127.0.0.1:8765/

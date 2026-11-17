@@ -31,6 +31,7 @@ WB.i18n.register('en', {
   'home.devPhone': 'Phones and tablets', 'home.devPhoneD': 'Add Waitbook to your home screen. Tick items, tap each link to download, open them in Kiwix and other free apps.',
   'home.devComputer': 'Computers', 'home.devComputerD': 'Download one script for Windows, macOS or Linux. It fetches everything, resumes if interrupted and checks files.',
   'home.devShare': 'Drives and hotspots', 'home.devShareD': 'Fill a USB drive or SD card for others, or share a library over Wi-Fi with a laptop or Raspberry Pi.',
+  'home.quick': 'Quick kits', 'home.quickCustom': 'Or pack your own', 'home.preset.pocket': 'Pocket', 'home.preset.pocket.d': 'The essentials for a phone: health, water, food, maps and a small encyclopedia.', 'home.preset.household': 'Household', 'home.preset.household.d': 'A family library for a laptop: encyclopedias, repair, farming, learning and more.', 'home.preset.community': 'Community', 'home.preset.community.d': 'A shared drive for a school, clinic or village, with installers for every device.', 'home.preset.use': 'Fill my kit',
   'home.footer': 'Waitbook hosts nothing: it links to the original publishers. Not medical advice — learn first aid in person.',
   'home.about': 'About and privacy',
 

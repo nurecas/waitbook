@@ -22,3 +22,9 @@ html.print-cards .card-sheet { break-after: page; border: 1.5pt solid #000; max-
 .card-sheet { border: 1.5pt solid #000; }
 .card-block.flags { border-color: #000 !important; background: #fff !important; }
 .card-block.flags h2 { color: #000 !important; }
+
+/* Kit manifest on paper: no form controls or export panel, no tinted rows. */
+.kit-summary .field, section[aria-labelledby="expTitle"], .ledger-head { display: none !important; }
+.row, .row:hover { background: none !important; }
+.meter { border-color: #000 !important; }
+.meter > i { background: #555 !important; }

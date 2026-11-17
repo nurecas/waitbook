@@ -1,0 +1,6 @@
+node_modules/
+.DS_Store
+*.log
+link-report.md
+/_site/
+/test-results/
